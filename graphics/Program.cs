@@ -277,7 +277,7 @@ namespace graphics
                     }
 
                     //VÄGG COLLISION
-                    if (playerX > 99 && playerX < 351 && playerY > 99 && playerY < 801) //OM DEN ÄR INOM SPAWN
+                    if (playerX > 99 && playerX < 351 && playerY > 99 && playerY < 800) //OM DEN ÄR INOM SPAWN
                     {
                         if (playerX <= 100) //OM DEN ÄR VÄNSTER HÅLL KVAR DEN DÄR
                         {
@@ -292,7 +292,7 @@ namespace graphics
                             playerY = 100;
                         }
                     }
-                    else if (playerY > 799 && playerY < 901) //OM DEN ÄR VID UTGÅNGEN
+                    else if (playerY > 800 && playerY < 901) //OM DEN ÄR VID UTGÅNGEN
                     {
                         if (playerX <= 100) //HÅLL KVAR VÄNSTER
                         {
@@ -314,7 +314,7 @@ namespace graphics
                         {
                             playerY = 850;
                         }
-                        else if (playerX <= 500 && playerY <= 800)
+                        else if (playerX < 500 && playerY <= 800)
                         {
                             playerY = 800;
                         }
@@ -325,10 +325,11 @@ namespace graphics
                     {
                         playerY = 800;
                     }
-                    else if (direction == "w" && playerX >= 350 && playerX < 400 && playerY <= 800 && playerY >= 750)
+                    else if (direction == "w" && playerX > 350 && playerX < 400 && playerY < 801 && playerY > 799)
                     {
                         playerY = 800;
                     }
+
                     else if (direction == "dw" && playerX > 350 && playerX <= 400 && playerY < 801 && playerY > 799)
                     {
                         playerY = 800;
@@ -339,19 +340,42 @@ namespace graphics
                     {
                         playerX = 550;
                     }
-                    else if (direction == "d" && playerX > 549 && playerX < 600 && playerY >= 750)
+                    else if (direction == "d" && playerX > 550 && playerX <= 600 && playerY > 750)
                     {
                         playerX = 550;
                     }
+
+                    if (direction == "ds" && playerX > 549 && playerX < 551 && playerY > 750)
+                    {
+                        playerX = 550;
+                    }
+
+                    else if (direction == "ds" && playerX > 550 && playerX <= 600 && playerY >= 750)
+                    {
+                        playerY = 750;
+                    }
+
+                    if (direction == "as" && playerX > 550 && playerX <= 600 && playerY >= 750)
+                    {
+                        playerY = 750;
+                    }
+
+
+                    else if (direction == "s" && playerX > 550 && playerX <= 600 && playerY >= 750)
+                    {
+                        playerY = 750;
+
+                    }
+
 
                     //MÅL HÖRN VÄNSTER
 
                     //MÅL HÖRN HÖGER
 
                     //RUTNÄTET COLLISION
-                    if (playerX > 499 && playerX < 1401 && playerY > 199 && playerY < 801)
+                    if (playerX > 499 && playerX < 1401 && playerY > 199 && playerY < 800)
                     {
-                        if (playerX <= 500)
+                        if (playerX < 500)
                         {
                             playerX = 500;
                         }
@@ -360,7 +384,7 @@ namespace graphics
                             playerX = 1350;
                         }
 
-                        if (playerY <= 200 && playerX <= 1300)
+                        if (playerY <= 200 && playerX < 1300)
                         {
                             playerY = 200;
                         }
@@ -451,6 +475,7 @@ namespace graphics
 
                     //DEATH COUNTER
                     Raylib.DrawText("DEATHS: " + deaths, 100, 40, 32, Color.BLACK);
+                    Raylib.DrawText("POSITION X: " + playerX + " Y: " + playerY, 300, 40, 32, Color.BLACK);
                     //RUTNÄT
                     //LOOPA MEDANS Y ÄR MELLAN 200 OCH 800 MED 100 ADDITION PER LOOP.
                     for (int y = 200; y < 800; y += 100)
