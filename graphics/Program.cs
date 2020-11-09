@@ -736,7 +736,7 @@ namespace graphics
         }
         static (float, float, string) PlayerMovement(float pY, float pX, string dir)
         {
-            //SPELAR RÖRELSE
+            //SPELAR RÖRELSE (hjälp)
             if (Raylib.IsKeyDown(KeyboardKey.KEY_W))
             {
                 pY -= 0.6f;
