@@ -59,6 +59,12 @@ namespace graphics
             Color menuOptionsColor = Color.GRAY;
             Color menuExitColor = Color.GRAY;
 
+            //KEY VALUES
+            Color keyOneColor = Color.GOLD;
+            Color keyTwoColor = Color.GOLD;
+            bool keyOneReady = true;
+            bool keyTwoReady = true;
+
             //PLAYER COLOR VALUES
             Color playerColor = Color.PURPLE;
             Color[] playerColors = { Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN, Color.BLUE, Color.PURPLE, Color.PINK, Color.WHITE };
@@ -148,6 +154,11 @@ namespace graphics
                             playerY = 225; //RESET SPELARENS POSITION IFALL DEN HAR GÅTT TILLBAKA TILL HUVUD MENYN
                             enemyY = 225; //RESET ENEMY POSITION
                             deaths = 0; //RESET ANTAL DEATHS
+                            keyOneReady = true;
+                            keyTwoReady = true;
+                            keyOneColor = Color.GOLD;
+                            keyTwoColor = Color.GOLD;
+                            keys = 0;
                         }
                     }
                     else
@@ -185,55 +196,13 @@ namespace graphics
                 //SPEL LOOP
                 if (gameState == "level_one")
                 {
-                    //SPELAR RÖRELSE
-                    if (Raylib.IsKeyDown(KeyboardKey.KEY_W))
-                    {
-                        playerY -= 0.6f;
-                        direction = "w";
-                    }
-                    if (Raylib.IsKeyDown(KeyboardKey.KEY_S))
-                    {
-                        playerY += 0.6f;
-                        direction = "s";
-                    }
-                    if (Raylib.IsKeyDown(KeyboardKey.KEY_A))
-                    {
-                        playerX -= 0.6f;
-                        direction = "a";
-                    }
-                    if (Raylib.IsKeyDown(KeyboardKey.KEY_D))
-                    {
-                        playerX += 0.6f;
-                        direction = "d";
-                    }
-                    //DIAGONELL HASTIGHET KONTROLL
-                    if (Raylib.IsKeyDown(KeyboardKey.KEY_W) && Raylib.IsKeyDown(KeyboardKey.KEY_D))
-                    {
-                        playerY += 0.2f;
-                        playerX -= 0.2f;
-                        direction = "dw";
-                    }
+                    (float pX, float pY, string dir) result = PlayerMovement(playerX, playerY, direction);
 
-                    if (Raylib.IsKeyDown(KeyboardKey.KEY_W) && Raylib.IsKeyDown(KeyboardKey.KEY_A))
-                    {
-                        playerY += 0.2f;
-                        playerX += 0.2f;
-                        direction = "aw";
-                    }
+                    playerX = result.pX;
+                    playerY = result.pY;
+                    direction = result.dir;
 
-                    if (Raylib.IsKeyDown(KeyboardKey.KEY_S) && Raylib.IsKeyDown(KeyboardKey.KEY_D))
-                    {
-                        playerY -= 0.2f;
-                        playerX -= 0.2f;
-                        direction = "ds";
-                    }
 
-                    if (Raylib.IsKeyDown(KeyboardKey.KEY_S) && Raylib.IsKeyDown(KeyboardKey.KEY_A))
-                    {
-                        playerY -= 0.2f;
-                        playerX += 0.2f;
-                        direction = "as";
-                    }
                     //FIENDE HASTIGHET
                     if (enemyY <= 225)
                     {
@@ -360,17 +329,52 @@ namespace graphics
                         playerY = 750;
                     }
 
-
                     else if (direction == "s" && playerX > 550 && playerX <= 600 && playerY >= 750)
                     {
                         playerY = 750;
 
                     }
-
-
                     //MÅL HÖRN VÄNSTER
+                    if (direction == "dw" && playerX >= 1350 && playerX < 1352 && playerY < 200 && playerY > 150)
+                    {
+                        playerX = 1350;
+                    }
+                    else if (direction == "d" && playerX >= 1350 && playerX < 1352 && playerY < 200 && playerY > 150)
+                    {
+                        playerX = 1350;
+                    }
+                    else if (direction == "s" && playerX > 1350 && playerX < 1400 && playerY < 200 && playerY > 150)
+                    {
+                        playerY = 150;
+                    }
+                    else if (direction == "ds" && playerX > 1350 && playerX < 1400 && playerY < 151 && playerY > 149)
+                    {
+                        playerY = 150;
+                    }
+                    else if (direction == "ds" && playerX > 1349 && playerX < 1351 && playerY < 200 && playerY > 150)
+                    {
+                        playerX = 1350;
+                    }
+                    else if (direction == "as" && playerX > 1350 && playerX < 1400 && playerY < 151 && playerY > 149)
+                    {
+                        playerY = 150;
+                    }
 
                     //MÅL HÖRN HÖGER
+                    if (direction == "aw" && playerX > 1499 && playerX < 1501 && playerY > 149 && playerY < 201)
+                    {
+                        playerX = 1500;
+                    }
+
+                    else if (direction == "as" && playerX > 1499 && playerX < 1501 && playerY > 149 && playerY < 201)
+                    {
+                        playerX = 1500;
+                    }
+
+                    else if (direction == "a" && playerX > 1499 && playerX < 1501 && playerY > 149 && playerY < 201)
+                    {
+                        playerX = 1500;
+                    }
 
                     //RUTNÄTET COLLISION
                     if (playerX > 499 && playerX < 1401 && playerY > 199 && playerY < 800)
@@ -402,7 +406,7 @@ namespace graphics
 
                     }
                     //UTGÅNG 2 
-                    if (playerX > 1299 && playerX < 1501 && playerY > 99 && playerY < 201) //NÄR SPELAREN ÄR I DE TVÅ UTGÅNGSRUTORNA
+                    if (playerX > 1299 && playerX < 1500 && playerY > 99 && playerY < 201) //NÄR SPELAREN ÄR I DE TVÅ UTGÅNGSRUTORNA
                     {
                         if (playerX <= 1300)
                         {
@@ -421,7 +425,7 @@ namespace graphics
                     //KOLLA MÅL COLLISION
                     if (playerX > 1499 && playerX < 1801 && playerY > 99 && playerY < 901)
                     {
-                        if (playerX <= 1500 && playerY >= 200)
+                        if (playerX <= 1500 && playerY > 200)
                         {
                             playerX = 1500;
                         }
@@ -439,11 +443,27 @@ namespace graphics
                             playerY = 900;
                         }
                     }
+                    //KOLLA COLLISSION MED NYCKLAR
+                    if (keyOneX - playerX > -50 && keyOneX - playerX < 50 && keyOneY - playerY > -50 && keyOneY - playerY < 50 && keyOneReady == true)
+                    {
+                        keys++;
+                        keyOneColor = Color.GREEN;
+                        keyOneReady = false;
+                    }
+
+                    else if (keyTwoX - playerX > -50 && keyTwoX - playerX < 50 && keyTwoY - playerY > -50 && keyTwoY - playerY < 50 && keyTwoReady == true)
+                    {
+                        keys++;
+                        keyTwoColor = Color.GREEN;
+                        keyTwoReady = false;
+                    }
+
+
 
                     // -------------------------------
-                    if (Raylib.IsKeyPressed(KeyboardKey.KEY_K))
+                    if (Raylib.IsKeyPressed(KeyboardKey.KEY_R))
                     {
-                        keys = 2;
+                        keys = 0;
                     }
                     //------------------------------------
 
@@ -458,10 +478,11 @@ namespace graphics
                         keys = 0;
                         playerX = 225;
                         playerY = 225;
-                        keyOneX = 250;
-                        keyOneY = 250;
-                        keyTwoX = 250;
-                        keyTwoY = 250;
+                        keyOneReady = true;
+                        keyTwoReady = true;
+                        keyOneColor = Color.GOLD;
+                        keyTwoColor = Color.GOLD;
+                        keys = 0;
                         gameState = "level_two";
                         level = "two";
                         completed = false;
@@ -557,9 +578,10 @@ namespace graphics
                     Raylib.DrawRectangle(480, 200, 20, 580, Color.BLACK);
                     Raylib.DrawRectangle(620, 800, 780, 20, Color.BLACK);
                     Raylib.DrawRectangle(1400, 220, 20, 600, Color.BLACK);
-                    //RITA NYCKEL
-                    Raylib.DrawRectangle(keyOneX, keyOneY, 50, 50, Color.GOLD);
-                    Raylib.DrawRectangle(keyTwoX, keyTwoY, 50, 50, Color.GOLD);
+
+                    //RITA NYCKLAR
+                    Raylib.DrawRectangle(keyOneX, keyOneY, 50, 50, keyOneColor);
+                    Raylib.DrawRectangle(keyTwoX, keyTwoY, 50, 50, keyTwoColor);
 
                     //RITA SPELARE
                     Raylib.DrawRectangle((int)playerX, (int)playerY, 50, 50, Color.BLACK); //OUTLINE
@@ -710,6 +732,61 @@ namespace graphics
 
                 }
             }
+
+        }
+        static (float, float, string) PlayerMovement(float pY, float pX, string dir)
+        {
+            //SPELAR RÖRELSE
+            if (Raylib.IsKeyDown(KeyboardKey.KEY_W))
+            {
+                pY -= 0.6f;
+                dir = "w";
+            }
+            if (Raylib.IsKeyDown(KeyboardKey.KEY_S))
+            {
+                pY += 0.6f;
+                dir = "s";
+            }
+            if (Raylib.IsKeyDown(KeyboardKey.KEY_A))
+            {
+                pX -= 0.6f;
+                dir = "a";
+            }
+            if (Raylib.IsKeyDown(KeyboardKey.KEY_D))
+            {
+                pX += 0.6f;
+                dir = "d";
+            }
+            //DIAGONELL HASTIGHET KONTROLL
+            if (Raylib.IsKeyDown(KeyboardKey.KEY_W) && Raylib.IsKeyDown(KeyboardKey.KEY_D))
+            {
+                pY += 0.2f;
+                pX -= 0.2f;
+                dir = "dw";
+            }
+
+            if (Raylib.IsKeyDown(KeyboardKey.KEY_W) && Raylib.IsKeyDown(KeyboardKey.KEY_A))
+            {
+                pY += 0.2f;
+                pX += 0.2f;
+                dir = "aw";
+            }
+
+            if (Raylib.IsKeyDown(KeyboardKey.KEY_S) && Raylib.IsKeyDown(KeyboardKey.KEY_D))
+            {
+                pY -= 0.2f;
+                pX -= 0.2f;
+                dir = "ds";
+            }
+
+            if (Raylib.IsKeyDown(KeyboardKey.KEY_S) && Raylib.IsKeyDown(KeyboardKey.KEY_A))
+            {
+                pY -= 0.2f;
+                pX += 0.2f;
+                dir = "as";
+            }
+
+            return (pX, pY, dir);
 
         }
     }
