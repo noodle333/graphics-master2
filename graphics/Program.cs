@@ -737,54 +737,55 @@ namespace graphics
         static (float, float, string) PlayerMovement(float pY, float pX, string dir)
         {
             //SPELAR RÖRELSE (hjälp)
-            if (Raylib.IsKeyDown(KeyboardKey.KEY_W))
-            {
-                pY -= 0.6f;
-                dir = "w";
-            }
-            if (Raylib.IsKeyDown(KeyboardKey.KEY_S))
-            {
-                pY += 0.6f;
-                dir = "s";
-            }
-            if (Raylib.IsKeyDown(KeyboardKey.KEY_A))
-            {
-                pX -= 0.6f;
-                dir = "a";
-            }
-            if (Raylib.IsKeyDown(KeyboardKey.KEY_D))
-            {
-                pX += 0.6f;
-                dir = "d";
-            }
-            //DIAGONELL HASTIGHET KONTROLL
-            if (Raylib.IsKeyDown(KeyboardKey.KEY_W) && Raylib.IsKeyDown(KeyboardKey.KEY_D))
-            {
-                pY += 0.2f;
-                pX -= 0.2f;
-                dir = "dw";
-            }
+            pX += 0.1f;
+            // if (Raylib.IsKeyDown(KeyboardKey.KEY_W))
+            // {
+            //     pY -= 0.6f;
+            //     dir = "w";
+            // }
+            // if (Raylib.IsKeyDown(KeyboardKey.KEY_S))
+            // {
+            //     pY += 0.6f;
+            //     dir = "s";
+            // }
+            // if (Raylib.IsKeyDown(KeyboardKey.KEY_A))
+            // {
+            //     pX -= 0.6f;
+            //     dir = "a";
+            // }
+            // if (Raylib.IsKeyDown(KeyboardKey.KEY_D))
+            // {
+            //     pX += 0.6f;
+            //     dir = "d";
+            // }
+            // //DIAGONELL HASTIGHET KONTROLL
+            // if (Raylib.IsKeyDown(KeyboardKey.KEY_W) && Raylib.IsKeyDown(KeyboardKey.KEY_D))
+            // {
+            //     pY += 0.2f;
+            //     pX -= 0.2f;
+            //     dir = "dw";
+            // }
 
-            if (Raylib.IsKeyDown(KeyboardKey.KEY_W) && Raylib.IsKeyDown(KeyboardKey.KEY_A))
-            {
-                pY += 0.2f;
-                pX += 0.2f;
-                dir = "aw";
-            }
+            // if (Raylib.IsKeyDown(KeyboardKey.KEY_W) && Raylib.IsKeyDown(KeyboardKey.KEY_A))
+            // {
+            //     pY += 0.2f;
+            //     pX += 0.2f;
+            //     dir = "aw";
+            // }
 
-            if (Raylib.IsKeyDown(KeyboardKey.KEY_S) && Raylib.IsKeyDown(KeyboardKey.KEY_D))
-            {
-                pY -= 0.2f;
-                pX -= 0.2f;
-                dir = "ds";
-            }
+            // if (Raylib.IsKeyDown(KeyboardKey.KEY_S) && Raylib.IsKeyDown(KeyboardKey.KEY_D))
+            // {
+            //     pY -= 0.2f;
+            //     pX -= 0.2f;
+            //     dir = "ds";
+            // }
 
-            if (Raylib.IsKeyDown(KeyboardKey.KEY_S) && Raylib.IsKeyDown(KeyboardKey.KEY_A))
-            {
-                pY -= 0.2f;
-                pX += 0.2f;
-                dir = "as";
-            }
+            // if (Raylib.IsKeyDown(KeyboardKey.KEY_S) && Raylib.IsKeyDown(KeyboardKey.KEY_A))
+            // {
+            //     pY -= 0.2f;
+            //     pX += 0.2f;
+            //     dir = "as";
+            // }
 
             return (pX, pY, dir);
 
