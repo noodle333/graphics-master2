@@ -67,6 +67,14 @@ namespace graphics
             Color menuOptionsColor = Color.GRAY;
             Color menuExitColor = Color.GRAY;
 
+            //OPTIONS COLOR VALUES
+            bool menuOptionsState = false;
+            int menuOptionsTarget = 1;
+            Color menuOptionsOne = Color.WHITE;
+            Color menuOptionsTwo = Color.WHITE;
+            Color menuOptionsThree = Color.WHITE;
+            Color menuOptionBoxColor = new Color(68, 68, 68, 175);
+
             //KEY VALUES
             Color keyOneColor = Color.GOLD;
             Color keyTwoColor = Color.GOLD;
@@ -84,7 +92,7 @@ namespace graphics
             Color wallColor = new Color(176, 32, 32, 255);
             //PLAYER COLOR VALUES
             Color playerColor = Color.PURPLE;
-            Color[] playerColors = { Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN, Color.BLUE, Color.PURPLE, Color.PINK, Color.WHITE };
+            Color[] playerColors = { Color.RED, Color.BEIGE, Color.BLACK, Color.SKYBLUE, Color.GRAY, Color.GREEN, Color.LIME, Color.MAGENTA, Color.ORANGE, Color.ORANGE, Color.PINK, Color.PURPLE, Color.YELLOW, Color.WHITE };
             int playerArrayIndex = 0;
 
             Raylib.SetTargetFPS(450); //KONTROLLERA FPS FÖR ATT SPELARENS HASTIGHET ÄR BEROENDE AV DEN
@@ -135,28 +143,67 @@ namespace graphics
                     Raylib.DrawText("OPTIONS", 170, 350, 24, menuOptionsColor);
                     Raylib.DrawText("EXIT", 170, 400, 24, menuExitColor);
 
-
-                    if (Raylib.IsKeyPressed(KeyboardKey.KEY_S)) //KOLLA VAR DEN SKA FLYTTA MARKERINGEN I MENYN
+                    if (menuOptionsState == true)
                     {
-                        if (menuTarget == 3)
+                        Raylib.DrawRectangle(350, 300, 300, 400, menuOptionBoxColor);
+                        Raylib.DrawText("PLAYER COLOR", 370, 320, 24, menuOptionsOne);
+                        Raylib.DrawText("MUSIC TRACKS", 370, 370, 24, menuOptionsTwo);
+                        Raylib.DrawText("BACK", 370, 420, 24, menuOptionsThree);
+                    }
+
+                    if (menuOptionsState == false)
+                    {
+                        if (Raylib.IsKeyPressed(KeyboardKey.KEY_S)) //KOLLA VAR DEN SKA FLYTTA MARKERINGEN I MENYN
                         {
-                            menuTarget = 1;
+                            if (menuTarget == 3)
+                            {
+                                menuTarget = 1;
+                            }
+                            else
+                            {
+                                menuTarget++;
+                            }
                         }
-                        else
+                        else if (Raylib.IsKeyPressed(KeyboardKey.KEY_W))
                         {
-                            menuTarget++;
+                            if (menuTarget == 1)
+                            {
+                                menuTarget = 3;
+                            }
+                            else
+                            {
+                                menuTarget--;
+                            }
                         }
                     }
-                    else if (Raylib.IsKeyPressed(KeyboardKey.KEY_W))
+
+
+                    //KOLLA OPTIONS MENY IFALL OPTIONS STATE ÄR SANN
+                    else if (menuOptionsState == true)
                     {
-                        if (menuTarget == 1)
+                        if (Raylib.IsKeyPressed(KeyboardKey.KEY_S)) //KOLLA VAR DEN SKA FLYTTA MARKERINGEN I MENYN
                         {
-                            menuTarget = 3;
+                            if (menuOptionsTarget == 3)
+                            {
+                                menuOptionsTarget = 1;
+                            }
+                            else
+                            {
+                                menuOptionsTarget++;
+                            }
                         }
-                        else
+                        else if (Raylib.IsKeyPressed(KeyboardKey.KEY_W))
                         {
-                            menuTarget--;
+                            if (menuOptionsTarget == 1)
+                            {
+                                menuOptionsTarget = 3;
+                            }
+                            else
+                            {
+                                menuOptionsTarget--;
+                            }
                         }
+
                     }
 
 
@@ -188,7 +235,8 @@ namespace graphics
                         menuOptionsColor = Color.BLACK;
                         if (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) || Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER))
                         {
-                            gameState = "pause";
+                            menuOptionsState = true;
+
                         }
                     }
                     else
@@ -206,6 +254,50 @@ namespace graphics
                     else
                     {
                         menuExitColor = Color.GRAY;
+                    }
+                    //MAIN MENU OPTIONS TARGET CHECK
+                    if (menuOptionsTarget == 1 && menuOptionsState == true)
+                    {
+                        menuOptionsOne = Color.BLACK;
+                        Raylib.DrawRectangle(590, 315, 35, 35, Color.BLACK);
+                        Raylib.DrawRectangle(595, 320, 25, 25, playerColor);
+
+                        if (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) || Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER))
+                        {
+                            if (playerArrayIndex == 13)
+                            {
+                                playerArrayIndex = 0;
+                            }
+                            else
+                            {
+                                playerArrayIndex++;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        menuOptionsOne = Color.WHITE;
+                    }
+                    if (menuOptionsTarget == 2)
+                    {
+                        menuOptionsTwo = Color.BLACK;
+                    }
+                    else
+                    {
+                        menuOptionsTwo = Color.WHITE;
+                    }
+                    if (menuOptionsTarget == 3)
+                    {
+                        menuOptionsThree = Color.BLACK;
+                        if (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) || Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER))
+                        {
+                            menuOptionsState = false;
+                            menuOptionsTarget = 1;
+                        }
+                    }
+                    else
+                    {
+                        menuOptionsThree = Color.WHITE;
                     }
 
                     Raylib.EndDrawing();
@@ -497,7 +589,6 @@ namespace graphics
 
                     //DEATH COUNTER
                     Raylib.DrawText("DEATHS: " + deaths, 100, 40, 32, Color.BLACK);
-                    Raylib.DrawText("POSITION X: " + playerX + " Y: " + playerY, 300, 40, 32, Color.BLACK);
                     //RUTNÄT
                     //LOOPA MEDANS Y ÄR MELLAN 200 OCH 800 MED 100 ADDITION PER LOOP.
                     for (int y = 200; y < 800; y += 100)
@@ -992,7 +1083,6 @@ namespace graphics
                     }
 
                     Raylib.DrawText("DEATHS: " + deaths, 100, 40, 32, Color.WHITE);
-                    Raylib.DrawText("POSITION X: " + playerX + " Y: " + playerY, 300, 40, 32, Color.WHITE);
                     Raylib.EndDrawing();
 
                     if (completed == true)
@@ -1066,7 +1156,6 @@ namespace graphics
                         {
                             gameState = "level_" + level;
                         }
-
                     }
                     else
                     {
@@ -1080,7 +1169,7 @@ namespace graphics
 
                         if (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) || Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER))
                         {
-                            if (playerArrayIndex == 7)
+                            if (playerArrayIndex == 13)
                             {
                                 playerArrayIndex = 0;
                             }
