@@ -71,11 +71,17 @@ namespace graphics
             Color keyOneColor = Color.GOLD;
             Color keyTwoColor = Color.GOLD;
             Color keyThreeColor = Color.GOLD;
-
             bool keyOneReady = true;
             bool keyTwoReady = true;
             bool keyThreeReady = true;
 
+            //TIMER VALUES
+            float timerOne = 0;
+            float timerTwo = 0;
+            float timerThree = 0;
+
+            //WALL VALUES
+            Color wallColor = new Color(176, 32, 32, 255);
             //PLAYER COLOR VALUES
             Color playerColor = Color.PURPLE;
             Color[] playerColors = { Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN, Color.BLUE, Color.PURPLE, Color.PINK, Color.WHITE };
@@ -538,7 +544,17 @@ namespace graphics
                     {
                         for (int x = 1500; x < 1800; x += 100)
                         {
-                            Raylib.DrawRectangle(x, y, 100, 100, Color.GREEN);
+                            if (count == true)
+                            {
+                                count = false;
+                                Raylib.DrawRectangle(x, y, 100, 100, Color.RED);
+                            }
+                            else if (count == false)
+                            {
+                                count = true;
+                                Raylib.DrawRectangle(x, y, 100, 100, wallColor);
+                            }
+
                         }
                     }
 
@@ -639,6 +655,9 @@ namespace graphics
                         keyThreeReady = true;
                         keyThreeColor = Color.GOLD;
                         playerDead = false;
+                        timerOne = 0;
+                        timerTwo = 0;
+                        timerThree = 0;
                     }
 
                     //COLLISION VÄGGAR
@@ -753,7 +772,6 @@ namespace graphics
                         keyThreeReady = false;
                     }
 
-
                     Raylib.BeginDrawing();
                     Raylib.ClearBackground(Color.BLACK);
                     bool count = true;
@@ -798,26 +816,43 @@ namespace graphics
                     {
                         for (int y = 350; y < 650; y += 100)
                         {
-                            Raylib.DrawRectangle(x, y, 100, 100, Color.GREEN);
+                            if (count == true)
+                            {
+                                count = false;
+                                Raylib.DrawRectangle(x, y, 100, 100, Color.GREEN);
+                            }
+                            else if (count == false)
+                            {
+                                count = true;
+                                Raylib.DrawRectangle(x, y, 100, 100, Color.DARKGREEN);
+                            }
                         }
-
                     }
 
+                    //KOLLA OM SPELAREN HAR KOMMIT I MÅL
+                    if (playerX >= 1600 && playerX < 1800 && playerY > 350 && playerY < 650)
+                    {
+                        completed = true; //SKAPA GAME STATE 3 MED SCROLLANDE BILDER SOM ILLUSION AV KAMERA
+                        //ALLTING I EN VARIABEL OCH NÄR MAN KLICKAR A SÅ SKROLLAS BILDERNA ÅT VÄNSTER.
+                    }
+
+
+
                     //SPAWN VÄGGAR
-                    Raylib.DrawRectangle(80, 330, 320, 20, Color.WHITE);
-                    Raylib.DrawRectangle(80, 350, 20, 300, Color.WHITE);
-                    Raylib.DrawRectangle(80, 650, 320, 20, Color.WHITE);
+                    Raylib.DrawRectangle(80, 330, 320, 20, wallColor);
+                    Raylib.DrawRectangle(80, 350, 20, 300, wallColor);
+                    Raylib.DrawRectangle(80, 650, 320, 20, wallColor);
                     //RUTNÄT VÄGGAR
-                    Raylib.DrawRectangle(380, 130, 20, 200, Color.WHITE);
-                    Raylib.DrawRectangle(380, 670, 20, 200, Color.WHITE);
-                    Raylib.DrawRectangle(400, 130, 1100, 20, Color.WHITE);
-                    Raylib.DrawRectangle(400, 850, 1100, 20, Color.WHITE);
-                    Raylib.DrawRectangle(1500, 130, 20, 220, Color.WHITE);
-                    Raylib.DrawRectangle(1500, 650, 20, 220, Color.WHITE);
+                    Raylib.DrawRectangle(380, 130, 20, 200, wallColor);
+                    Raylib.DrawRectangle(380, 670, 20, 200, wallColor);
+                    Raylib.DrawRectangle(400, 130, 1100, 20, wallColor);
+                    Raylib.DrawRectangle(400, 850, 1100, 20, wallColor);
+                    Raylib.DrawRectangle(1500, 130, 20, 220, wallColor);
+                    Raylib.DrawRectangle(1500, 650, 20, 220, wallColor);
                     //MÅL VÄGGAR
-                    Raylib.DrawRectangle(1520, 330, 300, 20, Color.WHITE);
-                    Raylib.DrawRectangle(1520, 650, 300, 20, Color.WHITE);
-                    Raylib.DrawRectangle(1800, 350, 20, 300, Color.WHITE);
+                    Raylib.DrawRectangle(1520, 330, 300, 20, wallColor);
+                    Raylib.DrawRectangle(1520, 650, 300, 20, wallColor);
+                    Raylib.DrawRectangle(1800, 350, 20, 300, wallColor);
 
                     //RITA NYCKLAR
                     Raylib.DrawRectangle(keyOneX, keyOneY, 50, 50, Color.BLACK);
@@ -827,6 +862,102 @@ namespace graphics
                     Raylib.DrawRectangle(keyThreeX, keyThreeY, 50, 50, Color.BLACK);
                     Raylib.DrawRectangle(keyThreeX + 5, keyThreeY + 5, 40, 40, keyThreeColor);
 
+                    //KEY TIMER
+                    if (keyOneReady == false && keys != 3)
+                    {
+                        timerOne += 1;
+                        //RITA TIDEN MAN HAR PÅ SIG KVAR
+                        if (timerOne <= 450)
+                        {
+                            Raylib.DrawText("1", keyOneX + 20, keyOneY + 10, 32, Color.WHITE);
+                        }
+                        else if (timerOne > 450 && timerOne <= 900)
+                        {
+                            Raylib.DrawText("2", keyOneX + 20, keyOneY + 10, 32, Color.WHITE);
+                        }
+                        else if (timerOne > 900 && timerOne <= 1350)
+                        {
+                            Raylib.DrawText("3", keyOneX + 20, keyOneY + 10, 32, Color.WHITE);
+                        }
+                        else if (timerOne > 1350 && timerOne <= 1800)
+                        {
+                            Raylib.DrawText("4", keyOneX + 20, keyOneY + 10, 32, Color.WHITE);
+                        }
+                        else if (timerOne > 1800 && timerOne <= 2250)
+                        {
+                            Raylib.DrawText("5", keyOneX + 20, keyOneY + 10, 32, Color.WHITE);
+                        }
+
+                        if (timerOne >= 2250)
+                        {
+                            keys--;
+                            keyOneColor = Color.GOLD;
+                            keyOneReady = true;
+                            timerOne = 0;
+                        }
+                    }
+                    if (keyTwoReady == false && keys != 3)
+                    {
+                        timerTwo += 1;
+                        if (timerTwo <= 450)
+                        {
+                            Raylib.DrawText("1", keyTwoX + 20, keyTwoY + 10, 32, Color.WHITE);
+                        }
+                        else if (timerTwo > 450 && timerTwo <= 900)
+                        {
+                            Raylib.DrawText("2", keyTwoX + 20, keyTwoY + 10, 32, Color.WHITE);
+                        }
+                        else if (timerTwo > 900 && timerTwo <= 1350)
+                        {
+                            Raylib.DrawText("3", keyTwoX + 20, keyTwoY + 10, 32, Color.WHITE);
+                        }
+                        else if (timerTwo > 1350 && timerTwo <= 1800)
+                        {
+                            Raylib.DrawText("4", keyTwoX + 20, keyTwoY + 10, 32, Color.WHITE);
+                        }
+                        else if (timerTwo > 1800 && timerTwo <= 2250)
+                        {
+                            Raylib.DrawText("5", keyTwoX + 20, keyTwoY + 10, 32, Color.WHITE);
+                        }
+                        if (timerTwo >= 2200)
+                        {
+                            keys--;
+                            keyTwoColor = Color.GOLD;
+                            keyTwoReady = true;
+                            timerTwo = 0;
+                        }
+                    }
+                    if (keyThreeReady == false && keys != 3)
+                    {
+                        timerThree += 1;
+                        if (timerThree <= 450)
+                        {
+                            Raylib.DrawText("1", keyThreeX + 20, keyThreeY + 10, 32, Color.WHITE);
+                        }
+                        else if (timerThree > 450 && timerOne <= 900)
+                        {
+                            Raylib.DrawText("2", keyThreeX + 20, keyThreeY + 10, 32, Color.WHITE);
+                        }
+                        else if (timerThree > 900 && timerOne <= 1350)
+                        {
+                            Raylib.DrawText("3", keyThreeX + 20, keyThreeY + 10, 32, Color.WHITE);
+                        }
+                        else if (timerThree > 1350 && timerOne <= 1800)
+                        {
+                            Raylib.DrawText("4", keyThreeX + 20, keyThreeY + 10, 32, Color.WHITE);
+                        }
+                        else if (timerThree > 1800 && timerOne <= 2250)
+                        {
+                            Raylib.DrawText("5", keyThreeX + 20, keyThreeY + 10, 32, Color.WHITE);
+                        }
+                        if (timerThree >= 2200)
+                        {
+                            keys--;
+                            keyThreeColor = Color.GOLD;
+                            keyThreeReady = true;
+                            timerThree = 0;
+                        }
+                    }
                     //RITA SPELARE
                     Raylib.DrawRectangle((int)playerX, (int)playerY, 50, 50, Color.BLACK);
                     Raylib.DrawRectangle((int)playerX + 5, (int)playerY + 5, 40, 40, playerColor);
@@ -854,133 +985,146 @@ namespace graphics
                     if (keys != 3)
                     {
                         Raylib.DrawTextureEx(barrierTwo, new Vector2(1500, 350), 0.0f, 1.0f, Color.WHITE);
-                        if (playerX >= 1500)
+                        if (playerX >= 1450)
                         {
-                            playerX = 1500;
+                            playerX = 1450;
                         }
                     }
 
-
-
                     Raylib.DrawText("DEATHS: " + deaths, 100, 40, 32, Color.WHITE);
                     Raylib.DrawText("POSITION X: " + playerX + " Y: " + playerY, 300, 40, 32, Color.WHITE);
-
-
                     Raylib.EndDrawing();
 
+                    if (completed == true)
+                    {
+                        playerX = 225;
+                        playerY = 475;
+                        keyOneReady = true;
+                        keyTwoReady = true;
+                        keyThreeReady = true;
+                        keyOneColor = Color.GOLD;
+                        keyTwoColor = Color.GOLD;
+                        keyThreeColor = Color.GOLD;
+                        gameState = "level_three";
+                        level = "three";
+                        completed = false;
+                        enemyY = 175;
+                        enemyX = 450;
+                    }
                     if (Raylib.IsKeyPressed(KeyboardKey.KEY_TAB))
                     {
                         gameState = "pause";
                     }
-
                 }
 
+                if (gameState == "level_three")
+                {
+                    //LOGIK
+
+                    //GRAFIK
+                    Raylib.BeginDrawing();
+                    Raylib.ClearBackground(Color.BLACK);
+                    Raylib.EndDrawing();
+                }
                 if (gameState == "pause")
                 {
-                    if (gameState == "pause")
+                    if (Raylib.IsKeyPressed(KeyboardKey.KEY_S))
                     {
-                        if (Raylib.IsKeyPressed(KeyboardKey.KEY_S))
-                        {
-                            if (menuTarget == 3)
-                            {
-                                menuTarget = 1;
-                            }
-                            else
-                            {
-                                menuTarget++;
-                            }
-                        }
-                        else if (Raylib.IsKeyPressed(KeyboardKey.KEY_W))
-                        {
-                            if (menuTarget == 1)
-                            {
-                                menuTarget = 3;
-                            }
-                            else
-                            {
-                                menuTarget--;
-                            }
-                        }
-
-                        Raylib.BeginDrawing();
-                        Raylib.ClearBackground(Color.PURPLE);
-                        Raylib.DrawText("PAUSED", 900, 200, 32, Color.BLACK);
-                        Raylib.DrawText("RESUME", 900, 300, 24, menuResumeColor);
-                        Raylib.DrawText("PLAYER COLOR", 900, 350, 24, menuOptionsColor);
-                        Raylib.DrawText("MAIN MENU", 900, 400, 24, menuExitColor);
-
-                        if (menuTarget == 1)
-                        {
-                            menuResumeColor = Color.WHITE;
-                            Raylib.DrawRectangle(850, 300, 25, 25, Color.BLACK);
-                            if (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) || Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER))
-                            {
-                                gameState = "level_" + level;
-                            }
-
-                        }
-                        else
-                        {
-                            menuResumeColor = Color.BLACK;
-                        }
-                        if (menuTarget == 2)
-                        {
-                            menuOptionsColor = Color.WHITE;
-                            Raylib.DrawRectangle(845, 345, 35, 35, Color.BLACK);
-                            Raylib.DrawRectangle(850, 350, 25, 25, playerColor);
-
-                            if (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) || Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER))
-                            {
-                                if (playerArrayIndex == 7)
-                                {
-                                    playerArrayIndex = 0;
-                                }
-                                else
-                                {
-                                    playerArrayIndex++;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            menuOptionsColor = Color.BLACK;
-                        }
                         if (menuTarget == 3)
                         {
-                            menuExitColor = Color.WHITE;
-                            Raylib.DrawRectangle(850, 400, 25, 25, Color.BLACK);
-                            if (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) || Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER))
-                            {
-                                gameState = "intro";
-                                menuTarget = 1; //SÄTT MARKERING HÖGST UPP I NÄSTA MENY
-                            }
+                            menuTarget = 1;
                         }
                         else
                         {
-                            menuExitColor = Color.BLACK;
+                            menuTarget++;
                         }
-
-
-                        Raylib.DrawText("CONTROLS", 200, 200, 32, Color.BLACK);
-                        Raylib.DrawText("WASD - MOVEMENT", 170, 300, 24, Color.BLACK);
-                        Raylib.DrawText("TAB - PAUSE GAME", 170, 400, 24, Color.BLACK);
-                        Raylib.DrawText("ESC - QUIT GAME", 170, 500, 24, Color.BLACK);
-
-
-                        Raylib.DrawText("OBJECTIVE", 1520, 200, 32, Color.BLACK);
-                        Raylib.DrawText("THE OBJECTIVE OF THE GAME ", 1490, 300, 24, Color.BLACK);
-                        Raylib.DrawText("IS TO AVOID ENEMIS AND REACH  ", 1490, 350, 24, Color.BLACK);
-                        Raylib.DrawText("THE BLACK AND WHITE FINISH", 1490, 400, 24, Color.BLACK);
-
-                        Raylib.DrawText("LINE TO ADVANCE FURTHER.", 1490, 450, 24, Color.BLACK);
-
-
-                        Raylib.EndDrawing();
+                    }
+                    else if (Raylib.IsKeyPressed(KeyboardKey.KEY_W))
+                    {
+                        if (menuTarget == 1)
+                        {
+                            menuTarget = 3;
+                        }
+                        else
+                        {
+                            menuTarget--;
+                        }
                     }
 
+                    Raylib.BeginDrawing();
+                    Raylib.ClearBackground(Color.PURPLE);
+                    Raylib.DrawText("PAUSED", 900, 200, 32, Color.BLACK);
+                    Raylib.DrawText("RESUME", 900, 300, 24, menuResumeColor);
+                    Raylib.DrawText("PLAYER COLOR", 900, 350, 24, menuOptionsColor);
+                    Raylib.DrawText("MAIN MENU", 900, 400, 24, menuExitColor);
+
+                    if (menuTarget == 1)
+                    {
+                        menuResumeColor = Color.WHITE;
+                        Raylib.DrawRectangle(850, 300, 25, 25, Color.BLACK);
+                        if (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) || Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER))
+                        {
+                            gameState = "level_" + level;
+                        }
+
+                    }
+                    else
+                    {
+                        menuResumeColor = Color.BLACK;
+                    }
+                    if (menuTarget == 2)
+                    {
+                        menuOptionsColor = Color.WHITE;
+                        Raylib.DrawRectangle(845, 345, 35, 35, Color.BLACK);
+                        Raylib.DrawRectangle(850, 350, 25, 25, playerColor);
+
+                        if (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) || Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER))
+                        {
+                            if (playerArrayIndex == 7)
+                            {
+                                playerArrayIndex = 0;
+                            }
+                            else
+                            {
+                                playerArrayIndex++;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        menuOptionsColor = Color.BLACK;
+                    }
+                    if (menuTarget == 3)
+                    {
+                        menuExitColor = Color.WHITE;
+                        Raylib.DrawRectangle(850, 400, 25, 25, Color.BLACK);
+                        if (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) || Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER))
+                        {
+                            gameState = "intro";
+                            menuTarget = 1; //SÄTT MARKERING HÖGST UPP I NÄSTA MENY
+                        }
+                    }
+                    else
+                    {
+                        menuExitColor = Color.BLACK;
+                    }
+                    Raylib.DrawText("CONTROLS", 200, 200, 32, Color.BLACK);
+                    Raylib.DrawText("WASD - MOVEMENT", 170, 300, 24, Color.BLACK);
+                    Raylib.DrawText("TAB - PAUSE GAME", 170, 400, 24, Color.BLACK);
+                    Raylib.DrawText("ESC - QUIT GAME", 170, 500, 24, Color.BLACK);
+
+
+                    Raylib.DrawText("OBJECTIVE", 1520, 200, 32, Color.BLACK);
+                    Raylib.DrawText("THE OBJECTIVE OF THE GAME ", 1490, 300, 24, Color.BLACK);
+                    Raylib.DrawText("IS TO AVOID ENEMIS AND REACH  ", 1490, 350, 24, Color.BLACK);
+                    Raylib.DrawText("THE BLACK AND WHITE FINISH", 1490, 400, 24, Color.BLACK);
+
+                    Raylib.DrawText("LINE TO ADVANCE FURTHER.", 1490, 450, 24, Color.BLACK);
+
+
+                    Raylib.EndDrawing();
                 }
             }
-
         }
         static (float, float, string) PlayerMovement(float pX, float pY, string dir)
         {
@@ -990,16 +1134,19 @@ namespace graphics
                 pY -= 0.6f;
                 dir = "w";
             }
+
             if (Raylib.IsKeyDown(KeyboardKey.KEY_S))
             {
                 pY += 0.6f;
                 dir = "s";
             }
+
             if (Raylib.IsKeyDown(KeyboardKey.KEY_A))
             {
                 pX -= 0.6f;
                 dir = "a";
             }
+
             if (Raylib.IsKeyDown(KeyboardKey.KEY_D))
             {
                 pX += 0.6f;
@@ -1049,7 +1196,6 @@ namespace graphics
                 {
                     eS = -1.2f;
                 }
-
                 eY += eS;
             }
             else if (gState == "level_two")
@@ -1062,11 +1208,9 @@ namespace graphics
                 {
                     eS = -1.8f;
                 }
-
                 eY += eS;
             }
             return (eY, eS, gState);
-
         }
         static (float, float, float, float, bool, string) EnemyCollision(float playX, float playY, float enemX, float enemY, bool pDead, string gState)
         {
@@ -1085,7 +1229,6 @@ namespace graphics
                 {
                     pDead = true;
                 }
-
                 else if (enemX + 600 - playX <= 75 && enemX + 600 - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
                 {
                     pDead = true;
@@ -1112,7 +1255,6 @@ namespace graphics
                 {
                     pDead = true;
                 }
-
                 else if (enemX + 800 - playX <= 75 && enemX + 800 - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
                 {
                     pDead = true;
@@ -1122,10 +1264,13 @@ namespace graphics
                     pDead = true;
                 }
             }
-
-
             return (playX, playY, enemX, enemY, pDead, gState);
         }
+
+
     }
 }
+
+
+
 
