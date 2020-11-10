@@ -20,9 +20,14 @@ namespace graphics
             const int screenHeight = 1000;
             Raylib.InitWindow(screenWidth, screenHeight, "GAME");
 
+            //BACKGROUND IMAGES
             Texture2D thirdBackground = Raylib.LoadTexture("thirdbackground.png");
             Texture2D secondBackground = Raylib.LoadTexture("secondbackground.png");
             Texture2D firstBackground = Raylib.LoadTexture("firstbackground.png");
+
+            //BARRIER IMAGES
+            Texture2D barrier = Raylib.LoadTexture("barrier.png");
+            Texture2D barrierTwo = Raylib.LoadTexture("barrier_level2.png");
 
             //BACKGROUND SCROLL VALUES
             float scrollThird = 0.0f;
@@ -42,11 +47,14 @@ namespace graphics
             int keyOneY = 425;
             int keyTwoX = 1225;
             int keyTwoY = 625;
+            int keyThreeX = 1425;
+            int keyThreeY = 775;
 
             //ENEMY VALUES
             float enemyX = 650;
             float enemyY = 225;
             float enemySpeed = 1.2f;
+            bool playerDead = false;
 
             //LEVEL, STATE AND GOAL VALUES
             string level = "one";
@@ -62,8 +70,11 @@ namespace graphics
             //KEY VALUES
             Color keyOneColor = Color.GOLD;
             Color keyTwoColor = Color.GOLD;
+            Color keyThreeColor = Color.GOLD;
+
             bool keyOneReady = true;
             bool keyTwoReady = true;
+            bool keyThreeReady = true;
 
             //PLAYER COLOR VALUES
             Color playerColor = Color.PURPLE;
@@ -152,7 +163,8 @@ namespace graphics
                             level = "one";
                             playerX = 225;
                             playerY = 225; //RESET SPELARENS POSITION IFALL DEN HAR GÅTT TILLBAKA TILL HUVUD MENYN
-                            enemyY = 225; //RESET ENEMY POSITION
+                            enemyX = 650; //RESET ENEMY POSITION
+                            enemyY = 225;
                             deaths = 0; //RESET ANTAL DEATHS
                             keyOneReady = true;
                             keyTwoReady = true;
@@ -196,55 +208,41 @@ namespace graphics
                 //SPEL LOOP
                 if (gameState == "level_one")
                 {
-                    (float pX, float pY, string dir) result = PlayerMovement(playerX, playerY, direction);
+                    (float pX, float pY, string dir) resultPlayer = PlayerMovement(playerX, playerY, direction);
 
-                    playerX = result.pX;
-                    playerY = result.pY;
-                    direction = result.dir;
-
+                    playerX = resultPlayer.pX;
+                    playerY = resultPlayer.pY;
+                    direction = resultPlayer.dir;
 
                     //FIENDE HASTIGHET
-                    if (enemyY <= 225)
-                    {
-                        enemySpeed = 1.2f;
-                    }
-                    else if (enemyY >= 775)
-                    {
-                        enemySpeed = -1.2f;
-                    }
+                    (float eY, float eS, string gState) resultEnemy = EnemyMovement(enemyY, enemySpeed, gameState);
 
-                    enemyY += enemySpeed;
+                    enemyY = resultEnemy.eY;
+                    enemySpeed = resultEnemy.eS;
+                    gameState = resultEnemy.gState;
 
                     //ENEMY COLLISION
-                    if (enemyX - playerX <= 75 && enemyX - playerX >= -25 && enemyY - playerY <= 75 && enemyY - playerY >= -25)
-                    {
-                        playerX = 225;
-                        playerY = 225;
-                        deaths++;
-                        keys = 0;
-                    }
-                    else if (enemyX + 200 - playerX <= 75 && enemyX + 200 - playerX >= -25 && enemyY - playerY <= 75 && enemyY - playerY >= -25)
-                    {
-                        playerX = 225;
-                        playerY = 225;
-                        deaths++;
-                        keys = 0;
-                    }
-                    else if (enemyX + 400 - playerX <= 75 && enemyX + 400 - playerX >= -25 && enemyY - playerY <= 75 && enemyY - playerY >= -25)
-                    {
-                        playerX = 225;
-                        playerY = 225;
-                        deaths++;
-                        keys = 0;
-                    }
-                    else if (enemyX + 600 - playerX <= 75 && enemyX + 600 - playerX >= -25 && enemyY - playerY <= 75 && enemyY - playerY >= -25)
-                    {
-                        playerX = 225;
-                        playerY = 225;
-                        deaths++;
-                        keys = 0;
-                    }
+                    (float playX, float playY, float enemX, float enemY, bool pDead, string gState) resultCollision = EnemyCollision(playerX, playerY, enemyX, enemyY, playerDead, gameState);
 
+                    playerX = resultCollision.playX;
+                    playerY = resultCollision.playY;
+                    enemyX = resultCollision.enemX;
+                    enemyY = resultCollision.enemY;
+                    playerDead = resultCollision.pDead;
+                    gameState = resultCollision.gState;
+
+                    if (playerDead == true)
+                    {
+                        playerX = 225;
+                        playerY = 225;
+                        deaths++;
+                        keys = 0;
+                        keyOneReady = true;
+                        keyOneColor = Color.GOLD;
+                        keyTwoReady = true;
+                        keyTwoColor = Color.GOLD;
+                        playerDead = false;
+                    }
                     //VÄGG COLLISION
                     if (playerX > 99 && playerX < 351 && playerY > 99 && playerY < 800) //OM DEN ÄR INOM SPAWN
                     {
@@ -458,15 +456,6 @@ namespace graphics
                         keyTwoReady = false;
                     }
 
-
-
-                    // -------------------------------
-                    if (Raylib.IsKeyPressed(KeyboardKey.KEY_R))
-                    {
-                        keys = 0;
-                    }
-                    //------------------------------------
-
                     //SE OM SPELAREN KOM I MÅL
                     if (playerX >= 1500 && playerX <= 1800 && playerY >= 700 && playerY <= 900)
                     {
@@ -475,17 +464,23 @@ namespace graphics
 
                     if (completed == true)
                     {
-                        keys = 0;
                         playerX = 225;
-                        playerY = 225;
+                        playerY = 475;
                         keyOneReady = true;
                         keyTwoReady = true;
                         keyOneColor = Color.GOLD;
                         keyTwoColor = Color.GOLD;
+                        keyOneX = 625;
+                        keyOneY = 375;
+                        keyTwoX = 1024;
+                        keyTwoY = 675;
                         keys = 0;
                         gameState = "level_two";
                         level = "two";
                         completed = false;
+                        enemyY = 175;
+                        enemyX = 450;
+
 
                     }
 
@@ -528,8 +523,9 @@ namespace graphics
                     }
                     else
                     {
-                        Raylib.DrawRectangle(1300, 100, 100, 100, Color.BLACK);
-                        Raylib.DrawRectangle(1400, 100, 100, 100, Color.BLACK);
+                        Raylib.DrawRectangle(1300, 100, 100, 100, Color.ORANGE);
+                        Raylib.DrawRectangle(1400, 100, 100, 100, Color.YELLOW);
+                        Raylib.DrawTextureEx(barrier, new Vector2(1300, 95), 0.0f, 1.0f, Color.WHITE);
                     }
 
 
@@ -542,16 +538,7 @@ namespace graphics
                     {
                         for (int x = 1500; x < 1800; x += 100)
                         {
-                            if (count == true)
-                            {
-                                count = false;
-                                Raylib.DrawRectangle(x, y, 100, 100, Color.WHITE);
-                            }
-                            else if (count == false)
-                            {
-                                count = true;
-                                Raylib.DrawRectangle(x, y, 100, 100, Color.BLACK);
-                            }
+                            Raylib.DrawRectangle(x, y, 100, 100, Color.GREEN);
                         }
                     }
 
@@ -580,8 +567,10 @@ namespace graphics
                     Raylib.DrawRectangle(1400, 220, 20, 600, Color.BLACK);
 
                     //RITA NYCKLAR
-                    Raylib.DrawRectangle(keyOneX, keyOneY, 50, 50, keyOneColor);
-                    Raylib.DrawRectangle(keyTwoX, keyTwoY, 50, 50, keyTwoColor);
+                    Raylib.DrawRectangle(keyOneX, keyOneY, 50, 50, Color.BLACK);
+                    Raylib.DrawRectangle(keyTwoX, keyTwoY, 50, 50, Color.BLACK);
+                    Raylib.DrawRectangle(keyOneX + 5, keyOneY + 5, 40, 40, keyOneColor);
+                    Raylib.DrawRectangle(keyTwoX + 5, keyTwoY + 5, 40, 40, keyTwoColor);
 
                     //RITA SPELARE
                     Raylib.DrawRectangle((int)playerX, (int)playerY, 50, 50, Color.BLACK); //OUTLINE
@@ -615,9 +604,268 @@ namespace graphics
 
                 if (gameState == "level_two")
                 {
+                    //PLAYER MOVEMENT METHOD
+                    (float pX, float pY, string dir) resultPlayer = PlayerMovement(playerX, playerY, direction);
+
+                    playerX = resultPlayer.pX;
+                    playerY = resultPlayer.pY;
+                    direction = resultPlayer.dir;
+                    //ENEMY MOVEMENT METHOD
+                    (float eY, float eS, string gState) resultEnemy = EnemyMovement(enemyY, enemySpeed, gameState);
+
+                    enemyY = resultEnemy.eY;
+                    enemySpeed = resultEnemy.eS;
+                    gameState = resultEnemy.gState;
+                    //ENEMY COLLISION METHOD
+                    (float playX, float playY, float enemX, float enemY, bool pDead, string gState) resultCollision = EnemyCollision(playerX, playerY, enemyX, enemyY, playerDead, gameState);
+
+                    playerX = resultCollision.playX;
+                    playerY = resultCollision.playY;
+                    enemyX = resultCollision.enemX;
+                    enemyY = resultCollision.enemY;
+                    playerDead = resultCollision.pDead;
+                    gameState = resultCollision.gState;
+                    //WHAT TO DO WHEN PLAYER DIES
+                    if (playerDead == true)
+                    {
+                        playerX = 225;
+                        playerY = 475;
+                        deaths++;
+                        keys = 0;
+                        keyOneReady = true;
+                        keyOneColor = Color.GOLD;
+                        keyTwoReady = true;
+                        keyTwoColor = Color.GOLD;
+                        keyThreeReady = true;
+                        keyThreeColor = Color.GOLD;
+                        playerDead = false;
+                    }
+
+                    //COLLISION VÄGGAR
+                    if (playerX > 99 && playerX < 399)
+                    {
+                        if (playerY <= 350)
+                        {
+                            playerY = 350;
+                        }
+                        else if (playerY >= 600)
+                        {
+                            playerY = 600;
+                        }
+                        if (playerX <= 100)
+                        {
+                            playerX = 100;
+                        }
+                    }
+                    //RUTNÄT TOPP COLLISION
+                    if (playerX > 399 && playerX < 1451 && playerY < 350 && playerY > 149)
+                    {
+                        if (playerY <= 150)
+                        {
+                            playerY = 150;
+                        }
+                        if (playerX <= 400)
+                        {
+                            playerX = 400;
+                        }
+                        else if (playerX >= 1450)
+                        {
+                            playerX = 1450;
+                        }
+                    }
+                    //RUTNÄT BOT COLLISION
+                    if (playerX > 399 && playerX < 1451 && playerY > 600 && playerY < 801)
+                    {
+                        if (playerX <= 400)
+                        {
+                            playerX = 400;
+                        }
+                        else if (playerX >= 1450)
+                        {
+                            playerX = 1450;
+                        }
+                        if (playerY >= 800)
+                        {
+                            playerY = 800;
+                        }
+                    }
+                    //MÅL COLLISION
+                    if (playerX > 1500 && playerX < 1751)
+                    {
+                        if (playerX >= 1750)
+                        {
+                            playerX = 1750;
+                        }
+                        if (playerY <= 350)
+                        {
+                            playerY = 350;
+                        }
+                        else if (playerY >= 600)
+                        {
+                            playerY = 600;
+                        }
+                    }
+
+                    //DIAGONELL COLLISION
+                    if (direction == "w" && playerX < 1500 && playerX > 1450 && playerY > 349 && playerY < 351)
+                    {
+                        playerY = 350;
+                    }
+                    else if (direction == "aw" && playerX < 1500 && playerX > 1450 && playerY > 349 && playerY < 351)
+                    {
+                        playerY = 350;
+                    }
+                    else if (direction == "dw" && playerX < 1500 && playerX > 1450 && playerY > 349 && playerY < 351)
+                    {
+                        playerY = 350;
+                    }
+
+                    if (direction == "s" && playerX < 1500 && playerX > 1450 && playerY > 599 && playerY < 601)
+                    {
+                        playerY = 600;
+                    }
+                    else if (direction == "ds" && playerX < 1500 && playerX > 1450 && playerY > 599 && playerY < 601)
+                    {
+                        playerY = 600;
+                    }
+                    else if (direction == "as" && playerX < 1500 && playerX > 1450 && playerY > 599 && playerY < 601)
+                    {
+                        playerY = 600;
+                    }
+                    //COLLISION MED NYCKLAR
+                    if (keyOneX - playerX > -50 && keyOneX - playerX < 50 && keyOneY - playerY > -50 && keyOneY - playerY < 50 && keyOneReady == true)
+                    {
+                        keys++;
+                        keyOneColor = Color.GREEN;
+                        keyOneReady = false;
+                    }
+
+                    else if (keyTwoX - playerX > -50 && keyTwoX - playerX < 50 && keyTwoY - playerY > -50 && keyTwoY - playerY < 50 && keyTwoReady == true)
+                    {
+                        keys++;
+                        keyTwoColor = Color.GREEN;
+                        keyTwoReady = false;
+                    }
+                    else if (keyThreeX - playerX > -50 && keyThreeX - playerX < 50 && keyThreeY - playerY > -50 && keyThreeY - playerY < 50 && keyThreeReady == true)
+                    {
+                        keys++;
+                        keyThreeColor = Color.GREEN;
+                        keyThreeReady = false;
+                    }
+
+
                     Raylib.BeginDrawing();
-                    Raylib.ClearBackground(Color.PINK);
-                    Raylib.DrawText("DEATHS: " + deaths, 100, 40, 32, Color.BLACK);
+                    Raylib.ClearBackground(Color.BLACK);
+                    bool count = true;
+
+                    //SKAPA SPAWN
+                    for (int x = 100; x < 400; x += 100)
+                    {
+                        for (int y = 350; y < 650; y += 100)
+                        {
+                            Raylib.DrawRectangle(x, y, 100, 100, Color.RED);
+                        }
+                    }
+                    //SKAPA RUTNÄT
+                    for (int x = 400; x < 1500; x += 100)
+                    {
+                        for (int y = 150; y < 850; y += 100)
+                        {
+                            if (count == true)
+                            {
+                                count = false;
+                                Raylib.DrawRectangle(x, y, 100, 100, Color.RED);
+                            }
+                            else if (count == false)
+                            {
+                                count = true;
+                                Raylib.DrawRectangle(x, y, 100, 100, Color.BLACK);
+                            }
+
+                        }
+                    }
+                    //SKAPA MÅL
+                    for (int x = 1500; x < 1600; x += 100)
+                    {
+                        for (int y = 350; y < 650; y += 100)
+                        {
+                            Raylib.DrawRectangle(x, y, 100, 100, Color.RED);
+                        }
+                    }
+
+                    //SKAPA MÅL LINJE
+                    for (int x = 1600; x < 1800; x += 100)
+                    {
+                        for (int y = 350; y < 650; y += 100)
+                        {
+                            Raylib.DrawRectangle(x, y, 100, 100, Color.GREEN);
+                        }
+
+                    }
+
+                    //SPAWN VÄGGAR
+                    Raylib.DrawRectangle(80, 330, 320, 20, Color.WHITE);
+                    Raylib.DrawRectangle(80, 350, 20, 300, Color.WHITE);
+                    Raylib.DrawRectangle(80, 650, 320, 20, Color.WHITE);
+                    //RUTNÄT VÄGGAR
+                    Raylib.DrawRectangle(380, 130, 20, 200, Color.WHITE);
+                    Raylib.DrawRectangle(380, 670, 20, 200, Color.WHITE);
+                    Raylib.DrawRectangle(400, 130, 1100, 20, Color.WHITE);
+                    Raylib.DrawRectangle(400, 850, 1100, 20, Color.WHITE);
+                    Raylib.DrawRectangle(1500, 130, 20, 220, Color.WHITE);
+                    Raylib.DrawRectangle(1500, 650, 20, 220, Color.WHITE);
+                    //MÅL VÄGGAR
+                    Raylib.DrawRectangle(1520, 330, 300, 20, Color.WHITE);
+                    Raylib.DrawRectangle(1520, 650, 300, 20, Color.WHITE);
+                    Raylib.DrawRectangle(1800, 350, 20, 300, Color.WHITE);
+
+                    //RITA NYCKLAR
+                    Raylib.DrawRectangle(keyOneX, keyOneY, 50, 50, Color.BLACK);
+                    Raylib.DrawRectangle(keyTwoX, keyTwoY, 50, 50, Color.BLACK);
+                    Raylib.DrawRectangle(keyOneX + 5, keyOneY + 5, 40, 40, keyOneColor);
+                    Raylib.DrawRectangle(keyTwoX + 5, keyTwoY + 5, 40, 40, keyTwoColor);
+                    Raylib.DrawRectangle(keyThreeX, keyThreeY, 50, 50, Color.BLACK);
+                    Raylib.DrawRectangle(keyThreeX + 5, keyThreeY + 5, 40, 40, keyThreeColor);
+
+                    //RITA SPELARE
+                    Raylib.DrawRectangle((int)playerX, (int)playerY, 50, 50, Color.BLACK);
+                    Raylib.DrawRectangle((int)playerX + 5, (int)playerY + 5, 40, 40, playerColor);
+
+                    //RITA FIENDER
+                    Raylib.DrawCircle((int)enemyX, (int)enemyY, 25, Color.BLACK); //OUTLINE
+                    Raylib.DrawCircle((int)enemyX, (int)enemyY, 20, Color.RED);
+
+                    Raylib.DrawCircle((int)enemyX + 200, (int)enemyY, 25, Color.BLACK); //OUTLINE
+                    Raylib.DrawCircle((int)enemyX + 200, (int)enemyY, 20, Color.RED);
+
+                    Raylib.DrawCircle((int)enemyX + 400, (int)enemyY, 25, Color.BLACK); //OUTLINE
+                    Raylib.DrawCircle((int)enemyX + 400, (int)enemyY, 20, Color.RED);
+
+                    Raylib.DrawCircle((int)enemyX + 600, (int)enemyY, 25, Color.BLACK); //OUTLINE
+                    Raylib.DrawCircle((int)enemyX + 600, (int)enemyY, 20, Color.RED);
+
+                    Raylib.DrawCircle((int)enemyX + 800, (int)enemyY, 25, Color.BLACK); //OUTLINE
+                    Raylib.DrawCircle((int)enemyX + 800, (int)enemyY, 20, Color.RED);
+
+                    Raylib.DrawCircle((int)enemyX + 1000, (int)enemyY, 25, Color.BLACK); //OUTLINE
+                    Raylib.DrawCircle((int)enemyX + 1000, (int)enemyY, 20, Color.RED);
+
+                    //KOLLA OM MAN HAR ALLA NYCKLAR OCH COLLISION
+                    if (keys != 3)
+                    {
+                        Raylib.DrawTextureEx(barrierTwo, new Vector2(1500, 350), 0.0f, 1.0f, Color.WHITE);
+                        if (playerX >= 1500)
+                        {
+                            playerX = 1500;
+                        }
+                    }
+
+
+
+                    Raylib.DrawText("DEATHS: " + deaths, 100, 40, 32, Color.WHITE);
+                    Raylib.DrawText("POSITION X: " + playerX + " Y: " + playerY, 300, 40, 32, Color.WHITE);
+
+
                     Raylib.EndDrawing();
 
                     if (Raylib.IsKeyPressed(KeyboardKey.KEY_TAB))
@@ -734,61 +982,149 @@ namespace graphics
             }
 
         }
-        static (float, float, string) PlayerMovement(float pY, float pX, string dir)
+        static (float, float, string) PlayerMovement(float pX, float pY, string dir)
         {
             //SPELAR RÖRELSE (hjälp)
-            pX += 0.1f;
-            // if (Raylib.IsKeyDown(KeyboardKey.KEY_W))
-            // {
-            //     pY -= 0.6f;
-            //     dir = "w";
-            // }
-            // if (Raylib.IsKeyDown(KeyboardKey.KEY_S))
-            // {
-            //     pY += 0.6f;
-            //     dir = "s";
-            // }
-            // if (Raylib.IsKeyDown(KeyboardKey.KEY_A))
-            // {
-            //     pX -= 0.6f;
-            //     dir = "a";
-            // }
-            // if (Raylib.IsKeyDown(KeyboardKey.KEY_D))
-            // {
-            //     pX += 0.6f;
-            //     dir = "d";
-            // }
-            // //DIAGONELL HASTIGHET KONTROLL
-            // if (Raylib.IsKeyDown(KeyboardKey.KEY_W) && Raylib.IsKeyDown(KeyboardKey.KEY_D))
-            // {
-            //     pY += 0.2f;
-            //     pX -= 0.2f;
-            //     dir = "dw";
-            // }
+            if (Raylib.IsKeyDown(KeyboardKey.KEY_W))
+            {
+                pY -= 0.6f;
+                dir = "w";
+            }
+            if (Raylib.IsKeyDown(KeyboardKey.KEY_S))
+            {
+                pY += 0.6f;
+                dir = "s";
+            }
+            if (Raylib.IsKeyDown(KeyboardKey.KEY_A))
+            {
+                pX -= 0.6f;
+                dir = "a";
+            }
+            if (Raylib.IsKeyDown(KeyboardKey.KEY_D))
+            {
+                pX += 0.6f;
+                dir = "d";
+            }
+            //DIAGONELL HASTIGHET KONTROLL
+            if (Raylib.IsKeyDown(KeyboardKey.KEY_W) && Raylib.IsKeyDown(KeyboardKey.KEY_D))
+            {
+                pY += 0.2f;
+                pX -= 0.2f;
+                dir = "dw";
+            }
 
-            // if (Raylib.IsKeyDown(KeyboardKey.KEY_W) && Raylib.IsKeyDown(KeyboardKey.KEY_A))
-            // {
-            //     pY += 0.2f;
-            //     pX += 0.2f;
-            //     dir = "aw";
-            // }
+            if (Raylib.IsKeyDown(KeyboardKey.KEY_W) && Raylib.IsKeyDown(KeyboardKey.KEY_A))
+            {
+                pY += 0.2f;
+                pX += 0.2f;
+                dir = "aw";
+            }
 
-            // if (Raylib.IsKeyDown(KeyboardKey.KEY_S) && Raylib.IsKeyDown(KeyboardKey.KEY_D))
-            // {
-            //     pY -= 0.2f;
-            //     pX -= 0.2f;
-            //     dir = "ds";
-            // }
+            if (Raylib.IsKeyDown(KeyboardKey.KEY_S) && Raylib.IsKeyDown(KeyboardKey.KEY_D))
+            {
+                pY -= 0.2f;
+                pX -= 0.2f;
+                dir = "ds";
+            }
 
-            // if (Raylib.IsKeyDown(KeyboardKey.KEY_S) && Raylib.IsKeyDown(KeyboardKey.KEY_A))
-            // {
-            //     pY -= 0.2f;
-            //     pX += 0.2f;
-            //     dir = "as";
-            // }
+            if (Raylib.IsKeyDown(KeyboardKey.KEY_S) && Raylib.IsKeyDown(KeyboardKey.KEY_A))
+            {
+                pY -= 0.2f;
+                pX += 0.2f;
+                dir = "as";
+            }
 
             return (pX, pY, dir);
 
+        }
+        static (float, float, string) EnemyMovement(float eY, float eS, string gState)
+        {
+            if (gState == "level_one")
+            {
+                if (eY <= 225)
+                {
+                    eS = 1.2f;
+                }
+                else if (eY >= 775)
+                {
+                    eS = -1.2f;
+                }
+
+                eY += eS;
+            }
+            else if (gState == "level_two")
+            {
+                if (eY <= 175)
+                {
+                    eS = 1.8f;
+                }
+                else if (eY >= 825)
+                {
+                    eS = -1.8f;
+                }
+
+                eY += eS;
+            }
+            return (eY, eS, gState);
+
+        }
+        static (float, float, float, float, bool, string) EnemyCollision(float playX, float playY, float enemX, float enemY, bool pDead, string gState)
+        {
+            if (gState == "level_one")
+            {
+                if (enemX - playX <= 75 && enemX - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
+                {
+                    pDead = true;
+                }
+
+                else if (enemX + 200 - playX <= 75 && enemX + 200 - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
+                {
+                    pDead = true;
+                }
+                else if (enemX + 400 - playX <= 75 && enemX + 400 - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
+                {
+                    pDead = true;
+                }
+
+                else if (enemX + 600 - playX <= 75 && enemX + 600 - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
+                {
+                    pDead = true;
+                }
+            }
+
+            else if (gState == "level_two")
+            {
+                if (enemX - playX <= 75 && enemX - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
+                {
+                    pDead = true;
+                }
+
+                else if (enemX + 200 - playX <= 75 && enemX + 200 - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
+                {
+                    pDead = true;
+                }
+                else if (enemX + 400 - playX <= 75 && enemX + 400 - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
+                {
+                    pDead = true;
+                }
+
+                else if (enemX + 600 - playX <= 75 && enemX + 600 - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
+                {
+                    pDead = true;
+                }
+
+                else if (enemX + 800 - playX <= 75 && enemX + 800 - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
+                {
+                    pDead = true;
+                }
+                else if (enemX + 1000 - playX <= 75 && enemX + 1000 - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
+                {
+                    pDead = true;
+                }
+            }
+
+
+            return (playX, playY, enemX, enemY, pDead, gState);
         }
     }
 }
