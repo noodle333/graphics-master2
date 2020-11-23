@@ -1,10 +1,5 @@
 ﻿// ATT GÖRA
-// NY FÄRG (edc7ff)
-// RECTANGLEREC COLLISION INKL KEYS
-// DIAGONELL COLISSION CHECK BEROENDE PÅ VAR SPELAREN ÄR PÅVÄG MED PLAYERSPEED
-// BANA 2
-// TEXTUR PÅ NYCKLARNA
-// BÄTTRE DESIGN PÅ DEN LÅSTA DÖRREN KANSKE OCKSÅ TEXTUR
+
 
 using System;
 using Raylib_cs;
@@ -143,14 +138,6 @@ namespace graphics
                     Raylib.DrawText("OPTIONS", 170, 350, 24, menuOptionsColor);
                     Raylib.DrawText("EXIT", 170, 400, 24, menuExitColor);
 
-                    if (menuOptionsState == true)
-                    {
-                        Raylib.DrawRectangle(350, 300, 300, 400, menuOptionBoxColor);
-                        Raylib.DrawText("PLAYER COLOR", 370, 320, 24, menuOptionsOne);
-                        Raylib.DrawText("MUSIC TRACKS", 370, 370, 24, menuOptionsTwo);
-                        Raylib.DrawText("BACK", 370, 420, 24, menuOptionsThree);
-                    }
-
                     if (menuOptionsState == false)
                     {
                         if (Raylib.IsKeyPressed(KeyboardKey.KEY_S)) //KOLLA VAR DEN SKA FLYTTA MARKERINGEN I MENYN
@@ -177,10 +164,13 @@ namespace graphics
                         }
                     }
 
-
                     //KOLLA OPTIONS MENY IFALL OPTIONS STATE ÄR SANN
                     else if (menuOptionsState == true)
                     {
+                        Raylib.DrawRectangle(350, 300, 300, 400, menuOptionBoxColor);
+                        Raylib.DrawText("PLAYER COLOR", 370, 320, 24, menuOptionsOne);
+                        Raylib.DrawText("MUSIC TRACKS", 370, 370, 24, menuOptionsTwo);
+                        Raylib.DrawText("BACK", 370, 420, 24, menuOptionsThree);
                         if (Raylib.IsKeyPressed(KeyboardKey.KEY_S)) //KOLLA VAR DEN SKA FLYTTA MARKERINGEN I MENYN
                         {
                             if (menuOptionsTarget == 3)
@@ -223,6 +213,10 @@ namespace graphics
                             keyTwoReady = true;
                             keyOneColor = Color.GOLD;
                             keyTwoColor = Color.GOLD;
+                            keyOneX = 825;
+                            keyOneY = 425;
+                            keyTwoX = 1225;
+                            keyTwoY = 625;
                             keys = 0;
                         }
                     }
@@ -236,7 +230,6 @@ namespace graphics
                         if (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) || Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER))
                         {
                             menuOptionsState = true;
-
                         }
                     }
                     else
@@ -278,7 +271,7 @@ namespace graphics
                     {
                         menuOptionsOne = Color.WHITE;
                     }
-                    if (menuOptionsTarget == 2)
+                    if (menuOptionsTarget == 2 && menuOptionsState == true)
                     {
                         menuOptionsTwo = Color.BLACK;
                     }
@@ -286,7 +279,7 @@ namespace graphics
                     {
                         menuOptionsTwo = Color.WHITE;
                     }
-                    if (menuOptionsTarget == 3)
+                    if (menuOptionsTarget == 3 && menuOptionsState == true)
                     {
                         menuOptionsThree = Color.BLACK;
                         if (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) || Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER))
@@ -394,12 +387,10 @@ namespace graphics
                     {
                         playerY = 800;
                     }
-
                     else if (direction == "dw" && playerX > 350 && playerX <= 400 && playerY < 801 && playerY > 799)
                     {
                         playerY = 800;
                     }
-
                     //RIGHT CORNER
                     if (direction == "dw" && playerX > 549 && playerX < 600 && playerY >= 750)
                     {
@@ -648,7 +639,6 @@ namespace graphics
 
                         }
                     }
-
                     //BORDERS
                     //VÄNSTER SPAWN BORDER
                     Raylib.DrawRectangle(80, 80, 20, 820, Color.BLACK);
@@ -1025,19 +1015,19 @@ namespace graphics
                         {
                             Raylib.DrawText("1", keyThreeX + 20, keyThreeY + 10, 32, Color.WHITE);
                         }
-                        else if (timerThree > 450 && timerOne <= 900)
+                        else if (timerThree > 450 && timerThree <= 900)
                         {
                             Raylib.DrawText("2", keyThreeX + 20, keyThreeY + 10, 32, Color.WHITE);
                         }
-                        else if (timerThree > 900 && timerOne <= 1350)
+                        else if (timerThree > 900 && timerThree <= 1350)
                         {
                             Raylib.DrawText("3", keyThreeX + 20, keyThreeY + 10, 32, Color.WHITE);
                         }
-                        else if (timerThree > 1350 && timerOne <= 1800)
+                        else if (timerThree > 1350 && timerThree <= 1800)
                         {
                             Raylib.DrawText("4", keyThreeX + 20, keyThreeY + 10, 32, Color.WHITE);
                         }
-                        else if (timerThree > 1800 && timerOne <= 2250)
+                        else if (timerThree > 1800 && timerThree <= 2250)
                         {
                             Raylib.DrawText("5", keyThreeX + 20, keyThreeY + 10, 32, Color.WHITE);
                         }
@@ -1115,6 +1105,11 @@ namespace graphics
                     Raylib.BeginDrawing();
                     Raylib.ClearBackground(Color.BLACK);
                     Raylib.EndDrawing();
+
+                    if (Raylib.IsKeyPressed(KeyboardKey.KEY_TAB))
+                    {
+                        gameState = "pause";
+                    }
                 }
                 if (gameState == "pause")
                 {
@@ -1190,6 +1185,7 @@ namespace graphics
                         if (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) || Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER))
                         {
                             gameState = "intro";
+
                             menuTarget = 1; //SÄTT MARKERING HÖGST UPP I NÄSTA MENY
                         }
                     }
@@ -1355,8 +1351,6 @@ namespace graphics
             }
             return (playX, playY, enemX, enemY, pDead, gState);
         }
-
-
     }
 }
 
