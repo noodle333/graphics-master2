@@ -45,6 +45,9 @@ namespace graphics
             int keyThreeX = 1425;
             int keyThreeY = 775;
 
+            //STAGE 3 VALUES
+            int stage = 0;
+
             //ENEMY VALUES
             float enemyX = 650;
             float enemyY = 225;
@@ -1097,19 +1100,59 @@ namespace graphics
                     }
                 }
 
-                if (gameState == "level_three")
+                if (gameState == "level_three" && stage == 0)
                 {
                     //LOGIK
 
                     //GRAFIK
                     Raylib.BeginDrawing();
                     Raylib.ClearBackground(Color.BLACK);
-                    Raylib.EndDrawing();
+                    Raylib.DrawText("Are you sure you want to continiue?", 600, 200, 32, Color.WHITE);
+                    Raylib.DrawText("This last level is kind of difficult.", 600, 250, 32, Color.WHITE);
+                    Raylib.DrawText("CONTINIUE", 600, 300, 24, menuResumeColor);
+                    Raylib.DrawText("MAIN MENU", 800, 300, 24, menuExitColor);
 
-                    if (Raylib.IsKeyPressed(KeyboardKey.KEY_TAB))
+
+
+                    if (Raylib.IsKeyPressed(KeyboardKey.KEY_A)) //KOLLA VAR DEN SKA FLYTTA MARKERINGEN I MENYN
                     {
-                        gameState = "pause";
+                        menuTarget = 1;
                     }
+                    else if (Raylib.IsKeyPressed(KeyboardKey.KEY_D))
+                    {
+                        menuTarget = 2;
+                    }
+                    //KOLLA VAR DEN ÄR OCH VAD DEN VILL GÖRA
+                    if (menuTarget == 1)
+                    {
+                        menuResumeColor = Color.WHITE;
+                        if (Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER) || Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE))
+                        {
+                            //BYT STAGE
+                            Raylib.ClearBackground(Color.PINK);
+                        }
+
+                    }
+                    else
+                    {
+                        menuResumeColor = Color.GRAY;
+                    }
+                    if (menuTarget == 2)
+                    {
+                        menuExitColor = Color.WHITE;
+                        if (Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER) || Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE))
+                        {
+                            gameState = "intro";
+                            level = "one";
+
+                        }
+                    }
+                    else
+                    {
+                        menuExitColor = Color.GRAY;
+                    }
+
+                    Raylib.EndDrawing();
                 }
                 if (gameState == "pause")
                 {
