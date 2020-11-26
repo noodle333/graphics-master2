@@ -33,6 +33,7 @@ namespace graphics
             float playerX = 225;
             float playerY = 225;
             string direction = "";
+            int player_coins = 0;
 
             //GAME VALUES
             int deaths = 0;
@@ -63,6 +64,7 @@ namespace graphics
             int menuTarget = 1;
             Color menuResumeColor = Color.GRAY;
             Color menuOptionsColor = Color.GRAY;
+            Color menuShopColor = Color.GRAY;
             Color menuExitColor = Color.GRAY;
 
             //OPTIONS COLOR VALUES
@@ -72,6 +74,10 @@ namespace graphics
             Color menuOptionsTwo = Color.WHITE;
             Color menuOptionsThree = Color.WHITE;
             Color menuOptionBoxColor = new Color(68, 68, 68, 175);
+
+            //SHOP MENU VALUES
+            Color menuShopSpeed = Color.WHITE;
+            Color menuShopSkin = Color.WHITE;
 
             //KEY VALUES
             Color keyOneColor = Color.GOLD;
@@ -139,32 +145,15 @@ namespace graphics
                     Raylib.DrawText("(PRESS TAB WHILE IN GAME TO PAUSE)", 200, 250, 16, Color.BLACK);
                     Raylib.DrawText("NEW GAME", 170, 300, 24, menuResumeColor);
                     Raylib.DrawText("OPTIONS", 170, 350, 24, menuOptionsColor);
-                    Raylib.DrawText("EXIT", 170, 400, 24, menuExitColor);
+                    Raylib.DrawText("SHOP", 170, 400, 24, menuShopColor);
+                    Raylib.DrawText("EXIT", 170, 450, 24, menuExitColor);
 
                     if (menuOptionsState == false)
                     {
-                        if (Raylib.IsKeyPressed(KeyboardKey.KEY_S)) //KOLLA VAR DEN SKA FLYTTA MARKERINGEN I MENYN
-                        {
-                            if (menuTarget == 3)
-                            {
-                                menuTarget = 1;
-                            }
-                            else
-                            {
-                                menuTarget++;
-                            }
-                        }
-                        else if (Raylib.IsKeyPressed(KeyboardKey.KEY_W))
-                        {
-                            if (menuTarget == 1)
-                            {
-                                menuTarget = 3;
-                            }
-                            else
-                            {
-                                menuTarget--;
-                            }
-                        }
+                        (int mnTarget, string mngState, int mnStage) resultMenu = MenuTarget(menuTarget, gameState, stage);
+                        menuTarget = resultMenu.mnTarget;
+                        gameState = resultMenu.mngState;
+                        stage = resultMenu.mnStage;
                     }
 
                     //KOLLA OPTIONS MENY IFALL OPTIONS STATE ÄR SANN
@@ -240,6 +229,18 @@ namespace graphics
                         menuOptionsColor = Color.GRAY;
                     }
                     if (menuTarget == 3)
+                    {
+                        menuShopColor = Color.BLACK;
+                        if (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) || Raylib.IsKeyPressed(KeyboardKey.KEY_TAB))
+                        {
+                            gameState = "shop";
+                        }
+                    }
+                    else
+                    {
+                        menuShopColor = Color.GRAY;
+                    }
+                    if (menuTarget == 4)
                     {
                         menuExitColor = Color.BLACK;
                         if (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) || Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER))
@@ -1111,17 +1112,12 @@ namespace graphics
                     Raylib.DrawText("This last level is kind of difficult.", 600, 250, 32, Color.WHITE);
                     Raylib.DrawText("CONTINIUE", 600, 300, 24, menuResumeColor);
                     Raylib.DrawText("MAIN MENU", 800, 300, 24, menuExitColor);
+                    Raylib.DrawText("SHOP", 1000, 300, 24, menuShopColor);
 
-
-
-                    if (Raylib.IsKeyPressed(KeyboardKey.KEY_A)) //KOLLA VAR DEN SKA FLYTTA MARKERINGEN I MENYN
-                    {
-                        menuTarget = 1;
-                    }
-                    else if (Raylib.IsKeyPressed(KeyboardKey.KEY_D))
-                    {
-                        menuTarget = 2;
-                    }
+                    (int mnTarget, string mngState, int mnStage) resultMenu = MenuTarget(menuTarget, gameState, stage);
+                    menuTarget = resultMenu.mnTarget;
+                    gameState = resultMenu.mngState;
+                    stage = resultMenu.mnStage;
                     //KOLLA VAR DEN ÄR OCH VAD DEN VILL GÖRA
                     if (menuTarget == 1)
                     {
@@ -1131,7 +1127,6 @@ namespace graphics
                             //BYT STAGE
                             Raylib.ClearBackground(Color.PINK);
                         }
-
                     }
                     else
                     {
@@ -1144,47 +1139,41 @@ namespace graphics
                         {
                             gameState = "intro";
                             level = "one";
-
                         }
                     }
                     else
                     {
                         menuExitColor = Color.GRAY;
                     }
+                    if (menuTarget == 3)
+                    {
+                        menuShopColor = Color.WHITE;
+                        if (Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER) || Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE))
+                        {
+                            gameState = "shop";
+                        }
+                    }
+                    else
+                    {
+                        menuShopColor = Color.GRAY;
+                    }
 
                     Raylib.EndDrawing();
                 }
                 if (gameState == "pause")
                 {
-                    if (Raylib.IsKeyPressed(KeyboardKey.KEY_S))
-                    {
-                        if (menuTarget == 3)
-                        {
-                            menuTarget = 1;
-                        }
-                        else
-                        {
-                            menuTarget++;
-                        }
-                    }
-                    else if (Raylib.IsKeyPressed(KeyboardKey.KEY_W))
-                    {
-                        if (menuTarget == 1)
-                        {
-                            menuTarget = 3;
-                        }
-                        else
-                        {
-                            menuTarget--;
-                        }
-                    }
+                    (int mnTarget, string mngState, int mnStage) resultMenu = MenuTarget(menuTarget, gameState, stage);
+                    menuTarget = resultMenu.mnTarget;
+                    gameState = resultMenu.mngState;
+                    stage = resultMenu.mnStage;
 
                     Raylib.BeginDrawing();
                     Raylib.ClearBackground(Color.PURPLE);
                     Raylib.DrawText("PAUSED", 900, 200, 32, Color.BLACK);
                     Raylib.DrawText("RESUME", 900, 300, 24, menuResumeColor);
                     Raylib.DrawText("PLAYER COLOR", 900, 350, 24, menuOptionsColor);
-                    Raylib.DrawText("MAIN MENU", 900, 400, 24, menuExitColor);
+                    Raylib.DrawText("SHOP", 900, 400, 24, menuShopColor);
+                    Raylib.DrawText("MAIN MENU", 900, 450, 24, menuExitColor);
 
                     if (menuTarget == 1)
                     {
@@ -1223,12 +1212,25 @@ namespace graphics
                     }
                     if (menuTarget == 3)
                     {
-                        menuExitColor = Color.WHITE;
+                        menuShopColor = Color.WHITE;
                         Raylib.DrawRectangle(850, 400, 25, 25, Color.BLACK);
                         if (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) || Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER))
                         {
-                            gameState = "intro";
+                            gameState = "shop";
+                        }
+                    }
+                    else
+                    {
+                        menuShopColor = Color.BLACK;
+                    }
 
+                    if (menuTarget == 4)
+                    {
+                        menuExitColor = Color.WHITE;
+                        Raylib.DrawRectangle(850, 450, 25, 25, Color.BLACK);
+                        if (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) || Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER))
+                        {
+                            gameState = "intro";
                             menuTarget = 1; //SÄTT MARKERING HÖGST UPP I NÄSTA MENY
                         }
                     }
@@ -1250,6 +1252,22 @@ namespace graphics
                     Raylib.DrawText("LINE TO ADVANCE FURTHER.", 1490, 450, 24, Color.BLACK);
 
 
+                    Raylib.EndDrawing();
+                }
+                if (gameState == "shop")
+                {
+                    //MENY LOGIK
+                    //GÖR EN MENY METOD
+                    //GÖR TEXTUR TILL BILDERNA FÖR SPEED SAMT SKIN
+                    //ÖKA FONT SIZEN NÄR MAN ÄR ÖVER MENYERNA SAMT FÄRGEN
+                    //NÄR MAN HAR KÖPT SAKEN SÅ ÄNDRAS FÄRGEN TILL GRÖN OCH POSITIONEN FASTNAR
+                    //(if menuTarget == x && purchased == false)
+
+                    //GRAFIK
+                    Raylib.BeginDrawing();
+                    Raylib.ClearBackground(Color.BLACK);
+                    //TEXT
+                    Raylib.DrawText("COINS: " + player_coins, 200, 200, 24, Color.WHITE);
                     Raylib.EndDrawing();
                 }
             }
@@ -1348,7 +1366,6 @@ namespace graphics
                 {
                     pDead = true;
                 }
-
                 else if (enemX + 200 - playX <= 75 && enemX + 200 - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
                 {
                     pDead = true;
@@ -1362,14 +1379,12 @@ namespace graphics
                     pDead = true;
                 }
             }
-
             else if (gState == "level_two")
             {
                 if (enemX - playX <= 75 && enemX - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
                 {
                     pDead = true;
                 }
-
                 else if (enemX + 200 - playX <= 75 && enemX + 200 - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
                 {
                     pDead = true;
@@ -1378,7 +1393,6 @@ namespace graphics
                 {
                     pDead = true;
                 }
-
                 else if (enemX + 600 - playX <= 75 && enemX + 600 - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
                 {
                     pDead = true;
@@ -1393,6 +1407,61 @@ namespace graphics
                 }
             }
             return (playX, playY, enemX, enemY, pDead, gState);
+        }
+        static (int, string, int) MenuTarget(int mnTarget, string mngState, int mnStage)
+        {
+            if (mngState == "intro" || mngState == "pause")
+            {
+                if (Raylib.IsKeyPressed(KeyboardKey.KEY_W))
+                {
+                    if (mnTarget == 1)
+                    {
+                        mnTarget = 4;
+                    }
+                    else
+                    {
+                        mnTarget--;
+                    }
+                }
+                else if (Raylib.IsKeyPressed(KeyboardKey.KEY_S))
+                {
+                    if (mnTarget == 4)
+                    {
+                        mnTarget = 1;
+                    }
+                    else
+                    {
+                        mnTarget++;
+                    }
+                }
+            }
+            else if (mngState == "level_three" && mnStage == 0)
+            {
+                if (Raylib.IsKeyPressed(KeyboardKey.KEY_A))
+                {
+                    if (mnTarget == 1)
+                    {
+                        mnTarget = 3;
+                    }
+                    else
+                    {
+                        mnTarget--;
+                    }
+                }
+                else if (Raylib.IsKeyPressed(KeyboardKey.KEY_D))
+                {
+                    if (mnTarget == 3)
+                    {
+                        mnTarget = 1;
+                    }
+                    else
+                    {
+                        mnTarget++;
+                    }
+                }
+            }
+            return (mnTarget, mngState, mnStage);
+
         }
     }
 }
