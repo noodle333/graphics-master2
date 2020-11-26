@@ -33,7 +33,9 @@ namespace graphics
             float playerX = 225;
             float playerY = 225;
             string direction = "";
-            int player_coins = 0;
+            int playerCoins = 1;
+            float playerSpeed = 0.6f;
+
 
             //GAME VALUES
             int deaths = 0;
@@ -78,6 +80,8 @@ namespace graphics
             //SHOP MENU VALUES
             Color menuShopSpeed = Color.WHITE;
             Color menuShopSkin = Color.WHITE;
+            bool speedBought = false;
+            bool skinBought = false;
 
             //KEY VALUES
             Color keyOneColor = Color.GOLD;
@@ -202,14 +206,22 @@ namespace graphics
                             enemyY = 225;
                             deaths = 0; //RESET ANTAL DEATHS
                             keyOneReady = true;
-                            keyTwoReady = true;
+                            keyTwoReady = true; //GÖR NYCKLARNA REDO.
                             keyOneColor = Color.GOLD;
-                            keyTwoColor = Color.GOLD;
+                            keyTwoColor = Color.GOLD; //ÄNDRA DERAS FÄRG
                             keyOneX = 825;
-                            keyOneY = 425;
+                            keyOneY = 425; //RESETTA POSITION 
                             keyTwoX = 1225;
                             keyTwoY = 625;
                             keys = 0;
+                            timerOne = 0;
+                            timerTwo = 0; //RESETTA TIMERS
+                            timerThree = 0;
+                            //playerCoins = 0;
+                            speedBought = false; //RESETTA SHOP UPGRADES
+                            skinBought = false;
+                            playerSpeed = 0.6f; //TA BORT SHOP UPGRADES FRÅN SPELAREN
+                            menuTarget = 1; //RESETTA MENY TARGET
                         }
                     }
                     else
@@ -231,7 +243,7 @@ namespace graphics
                     if (menuTarget == 3)
                     {
                         menuShopColor = Color.BLACK;
-                        if (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) || Raylib.IsKeyPressed(KeyboardKey.KEY_TAB))
+                        if (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) || Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER))
                         {
                             gameState = "shop";
                         }
@@ -303,11 +315,12 @@ namespace graphics
                 //SPEL LOOP
                 if (gameState == "level_one")
                 {
-                    (float pX, float pY, string dir) resultPlayer = PlayerMovement(playerX, playerY, direction);
+                    (float pX, float pY, string dir, float pSpeed) resultPlayer = PlayerMovement(playerX, playerY, direction, playerSpeed);
 
                     playerX = resultPlayer.pX;
                     playerY = resultPlayer.pY;
                     direction = resultPlayer.dir;
+                    playerSpeed = resultPlayer.pSpeed;
 
                     //FIENDE HASTIGHET
                     (float eY, float eS, string gState) resultEnemy = EnemyMovement(enemyY, enemySpeed, gameState);
@@ -706,11 +719,12 @@ namespace graphics
                 if (gameState == "level_two")
                 {
                     //PLAYER MOVEMENT METHOD
-                    (float pX, float pY, string dir) resultPlayer = PlayerMovement(playerX, playerY, direction);
+                    (float pX, float pY, string dir, float pSpeed) resultPlayer = PlayerMovement(playerX, playerY, direction, playerSpeed);
 
                     playerX = resultPlayer.pX;
                     playerY = resultPlayer.pY;
                     direction = resultPlayer.dir;
+                    playerSpeed = resultPlayer.pSpeed;
                     //ENEMY MOVEMENT METHOD
                     (float eY, float eS, string gState) resultEnemy = EnemyMovement(enemyY, enemySpeed, gameState);
 
@@ -1217,6 +1231,7 @@ namespace graphics
                         if (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) || Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER))
                         {
                             gameState = "shop";
+                            menuTarget = 1;
                         }
                     }
                     else
@@ -1232,6 +1247,7 @@ namespace graphics
                         {
                             gameState = "intro";
                             menuTarget = 1; //SÄTT MARKERING HÖGST UPP I NÄSTA MENY
+
                         }
                     }
                     else
@@ -1257,7 +1273,75 @@ namespace graphics
                 if (gameState == "shop")
                 {
                     //MENY LOGIK
-                    //GÖR EN MENY METOD
+                    (int mnTarget, string mngState, int mnStage) resultMenu = MenuTarget(menuTarget, gameState, stage);
+                    menuTarget = resultMenu.mnTarget;
+                    gameState = resultMenu.mngState;
+                    stage = resultMenu.mnStage;
+
+                    if (menuTarget == 1)
+                    {
+                        menuResumeColor = Color.WHITE;
+                        if (Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER) || Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE))
+                        {
+                            gameState = "level_" + level;
+                        }
+                    }
+                    else
+                    {
+                        menuResumeColor = Color.GRAY;
+                    }
+                    if (menuTarget == 2 && speedBought == false)
+                    {
+                        if (Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER) || Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE))
+                        {
+                            if (playerCoins >= 1)
+                            {
+                                //FRÅGA MICKE FÖR SPEED UPGRADES
+                                playerSpeed = 0.8f;
+                                playerCoins--;
+                                speedBought = true;
+                            }
+                        }
+                        menuExitColor = Color.WHITE;
+                    }
+                    else if (speedBought == true && menuTarget == 2)
+                    {
+                        menuExitColor = Color.LIME;
+                    }
+                    else if (speedBought == true)
+                    {
+                        menuExitColor = Color.GREEN;
+                    }
+                    else
+                    {
+                        menuExitColor = Color.GRAY;
+                    }
+                    if (menuTarget == 3 && skinBought == false)
+                    {
+                        menuOptionsColor = Color.WHITE;
+                        if (Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER) || Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE))
+                        {
+                            if (playerCoins >= 1)
+                            {
+                                //FRÅGA MICKE FÖR SPEED UPGRADES
+                                playerCoins--;
+                                skinBought = true;
+                            }
+
+                        }
+                    }
+                    else if (skinBought == true && menuTarget == 3)
+                    {
+                        menuOptionsColor = Color.LIME;
+                    }
+                    else if (skinBought == true)
+                    {
+                        menuOptionsColor = Color.GREEN;
+                    }
+                    else
+                    {
+                        menuOptionsColor = Color.GRAY;
+                    }
                     //GÖR TEXTUR TILL BILDERNA FÖR SPEED SAMT SKIN
                     //ÖKA FONT SIZEN NÄR MAN ÄR ÖVER MENYERNA SAMT FÄRGEN
                     //NÄR MAN HAR KÖPT SAKEN SÅ ÄNDRAS FÄRGEN TILL GRÖN OCH POSITIONEN FASTNAR
@@ -1267,67 +1351,71 @@ namespace graphics
                     Raylib.BeginDrawing();
                     Raylib.ClearBackground(Color.BLACK);
                     //TEXT
-                    Raylib.DrawText("COINS: " + player_coins, 200, 200, 24, Color.WHITE);
+                    Raylib.DrawText("COINS: " + playerCoins, 200, 100, 32, Color.WHITE);
+                    Raylib.DrawText("BACK", 200, 200, 32, menuResumeColor);
+                    Raylib.DrawText("SPEED UPGRADE", 500, 200, 32, menuExitColor);
+                    Raylib.DrawText("SKIN UPGRADE", 1000, 200, 32, menuOptionsColor);
                     Raylib.EndDrawing();
                 }
             }
         }
-        static (float, float, string) PlayerMovement(float pX, float pY, string dir)
+        static (float, float, string, float) PlayerMovement(float pX, float pY, string dir, float pSpeed)
         {
+
             //SPELAR RÖRELSE (hjälp)
             if (Raylib.IsKeyDown(KeyboardKey.KEY_W))
             {
-                pY -= 0.6f;
+                pY -= pSpeed;
                 dir = "w";
             }
 
             if (Raylib.IsKeyDown(KeyboardKey.KEY_S))
             {
-                pY += 0.6f;
+                pY += pSpeed;
                 dir = "s";
             }
 
             if (Raylib.IsKeyDown(KeyboardKey.KEY_A))
             {
-                pX -= 0.6f;
+                pX -= pSpeed;
                 dir = "a";
             }
 
             if (Raylib.IsKeyDown(KeyboardKey.KEY_D))
             {
-                pX += 0.6f;
+                pX += pSpeed;
                 dir = "d";
             }
             //DIAGONELL HASTIGHET KONTROLL
             if (Raylib.IsKeyDown(KeyboardKey.KEY_W) && Raylib.IsKeyDown(KeyboardKey.KEY_D))
             {
-                pY += 0.2f;
-                pX -= 0.2f;
+                pY += pSpeed / 3;
+                pX -= pSpeed / 3;
                 dir = "dw";
             }
 
             if (Raylib.IsKeyDown(KeyboardKey.KEY_W) && Raylib.IsKeyDown(KeyboardKey.KEY_A))
             {
-                pY += 0.2f;
-                pX += 0.2f;
+                pY += pSpeed / 3;
+                pX += pSpeed / 3;
                 dir = "aw";
             }
 
             if (Raylib.IsKeyDown(KeyboardKey.KEY_S) && Raylib.IsKeyDown(KeyboardKey.KEY_D))
             {
-                pY -= 0.2f;
-                pX -= 0.2f;
+                pY -= pSpeed / 3;
+                pX -= pSpeed / 3;
                 dir = "ds";
             }
 
             if (Raylib.IsKeyDown(KeyboardKey.KEY_S) && Raylib.IsKeyDown(KeyboardKey.KEY_A))
             {
-                pY -= 0.2f;
-                pX += 0.2f;
+                pY -= pSpeed / 3;
+                pX += pSpeed / 3;
                 dir = "as";
             }
 
-            return (pX, pY, dir);
+            return (pX, pY, dir, pSpeed);
 
         }
         static (float, float, string) EnemyMovement(float eY, float eS, string gState)
@@ -1436,6 +1524,31 @@ namespace graphics
                 }
             }
             else if (mngState == "level_three" && mnStage == 0)
+            {
+                if (Raylib.IsKeyPressed(KeyboardKey.KEY_A))
+                {
+                    if (mnTarget == 1)
+                    {
+                        mnTarget = 3;
+                    }
+                    else
+                    {
+                        mnTarget--;
+                    }
+                }
+                else if (Raylib.IsKeyPressed(KeyboardKey.KEY_D))
+                {
+                    if (mnTarget == 3)
+                    {
+                        mnTarget = 1;
+                    }
+                    else
+                    {
+                        mnTarget++;
+                    }
+                }
+            }
+            else if (mngState == "shop")
             {
                 if (Raylib.IsKeyPressed(KeyboardKey.KEY_A))
                 {
