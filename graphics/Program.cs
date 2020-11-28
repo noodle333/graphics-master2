@@ -11,6 +11,7 @@ namespace graphics
     {
         static void Main(string[] args)
         {
+            //FRÅGA MICKE OM RANDOMIZED RUM SÅ POSITIONERNA FÖLJER MED.
             const int screenWidth = 1920;
             const int screenHeight = 1000;
             Raylib.InitWindow(screenWidth, screenHeight, "GAME");
@@ -221,6 +222,7 @@ namespace graphics
                             speedBought = false; //RESETTA SHOP UPGRADES
                             skinBought = false;
                             playerSpeed = 0.6f; //TA BORT SHOP UPGRADES FRÅN SPELAREN
+                            stage = 0;
                         }
                     }
                     else
@@ -1119,6 +1121,7 @@ namespace graphics
 
                 if (gameState == "level_three")
                 {
+                    bool count = true;
                     //LOGIK
                     (float pX, float pY, string dir, float pSpeed) resultPlayer = PlayerMovement(playerX, playerY, direction, playerSpeed);
 
@@ -1157,6 +1160,8 @@ namespace graphics
                         playerDead = false;
                     }
 
+                    Random generator = new Random();
+
                     if (stage == 0)
                     {
                         //GRAFIK
@@ -1179,7 +1184,7 @@ namespace graphics
                             if (Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER) || Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE))
                             {
                                 //BYT STAGE
-                                stage = 1;
+                                stage = generator.Next(1, 4);
                                 playerX = 345;
                                 playerY = 475;
                             }
@@ -1218,22 +1223,38 @@ namespace graphics
                     }
                     if (stage == 1)
                     {
+                        //COLLISION STAGE 1
+                        if (playerX <= 20)
+                        {
+                            playerX = 20;
+                        }
+                        else if (playerX >= 1900)
+                        {
+                            stage = 2;
+                            playerX = 0;
+                        }
+                        if (playerY <= 50)
+                        {
+                            playerY = 50;
+                        }
+                        else if (playerY >= 900)
+                        {
+                            playerY = 900;
+                        }
                         Raylib.BeginDrawing();
                         Raylib.ClearBackground(Color.DARKGRAY);
-                        bool count = true;
+
                         //RUTNÄT
                         for (int y = 50; y < 950; y += 100)
                         {
-                            //VARJE Y LOOPA X MELLAN 500 OCH 1400 MED 100 ADDITION PER LOOP
                             for (int x = 20; x < 1920; x += 100)
                             {
-                                //RITA EN GUL REKTANGEL OCH SÄTT COUNT TILL FALSE
+                                //KONTROLLERA SÅ DE BLIR VARANNAN RUTA
                                 if (count == true)
                                 {
                                     count = false;
                                     Raylib.DrawRectangle(x, y, 100, 100, Color.WHITE);
                                 }
-                                //NÄR COUNT ÄR FALSE RITA EN ORANGE KVADRAT OCH SÄTT COUNT TILL TRUE
                                 else if (count == false)
                                 {
                                     count = true;
@@ -1252,11 +1273,108 @@ namespace graphics
                         Raylib.DrawRectangle((int)playerX, (int)playerY, 50, 50, Color.BLACK);
                         Raylib.DrawRectangle((int)playerX + 5, (int)playerY + 5, 40, 40, playerColor);
                         Raylib.EndDrawing();
-
-                        if (Raylib.IsKeyPressed(KeyboardKey.KEY_TAB))
+                    }
+                    else if (stage == 2)
+                    {
+                        //COLLISION STAGE 2
+                        if (playerY <= 50)
                         {
-                            gameState = "pause";
+                            playerY = 50;
                         }
+                        else if (playerY >= 900)
+                        {
+                            playerY = 900;
+                        }
+                        if (playerX <= -20)
+                        {
+                            stage = 1;
+                            playerX = 1850;
+                        }
+                        else if (playerX >= 1900)
+                        {
+                            stage = 3;
+                            playerX = 0;
+                        }
+                        Raylib.BeginDrawing();
+                        Raylib.ClearBackground(Color.DARKGRAY);
+                        for (int y = 50; y < 950; y += 100)
+                        {
+                            //VARJE Y LOOPA X MELLAN 500 OCH 1400 MED 100 ADDITION PER LOOP
+                            for (int x = -35; x < 2065; x += 100)
+                            {
+                                //RITA EN GUL REKTANGEL OCH SÄTT COUNT TILL FALSE
+                                if (count == true)
+                                {
+                                    count = false;
+                                    Raylib.DrawRectangle(x, y, 100, 100, Color.WHITE);
+                                }
+                                //NÄR COUNT ÄR FALSE RITA EN ORANGE KVADRAT OCH SÄTT COUNT TILL TRUE
+                                else if (count == false)
+                                {
+                                    count = true;
+                                    Raylib.DrawRectangle(x, y, 100, 100, Color.GRAY);
+                                }
+                            }
+                        }
+                        Raylib.DrawRectangle((int)playerX, (int)playerY, 50, 50, Color.BLACK);
+                        Raylib.DrawRectangle((int)playerX + 5, (int)playerY + 5, 40, 40, playerColor);
+                        Raylib.EndDrawing();
+                    }
+                    //STAGE 3
+                    else if (stage == 3)
+                    {
+                        if (playerX <= -20)
+                        {
+                            stage = 2;
+                            playerX = 1850;
+                        }
+                        if (playerX >= 1850)
+                        {
+                            playerX = 1850;
+                        }
+                        if (playerY <= 50)
+                        {
+                            playerY = 50;
+                        }
+                        else if (playerY >= 900)
+                        {
+                            playerY = 900;
+                        }
+                        Raylib.BeginDrawing();
+                        Raylib.ClearBackground(Color.DARKGRAY);
+                        for (int y = 50; y < 950; y += 100)
+                        {
+                            for (int x = 0; x < 1900; x += 100)
+                            {
+                                //KONTROLLERA SÅ DE BLIR VARANNAN RUTA
+                                if (count == true)
+                                {
+                                    count = false;
+                                    Raylib.DrawRectangle(x, y, 100, 100, Color.WHITE);
+                                }
+                                else if (count == false)
+                                {
+                                    count = true;
+                                    Raylib.DrawRectangle(x, y, 100, 100, Color.GRAY);
+                                }
+                            }
+                        }
+                        //SPAWN  2
+                        for (int y = 350; y < 650; y += 100)
+                        {
+                            for (int x = 1400; x < 1700; x += 100)
+                            {
+                                Raylib.DrawRectangle(x, y, 100, 100, Color.GREEN);
+                            }
+                        }
+
+                        Raylib.DrawRectangle((int)playerX, (int)playerY, 50, 50, Color.BLACK);
+                        Raylib.DrawRectangle((int)playerX + 5, (int)playerY + 5, 40, 40, playerColor);
+                        Raylib.EndDrawing();
+                    }
+                    if (Raylib.IsKeyPressed(KeyboardKey.KEY_TAB))
+                    {
+                        gameState = "pause";
                     }
                 }
                 if (gameState == "pause")
