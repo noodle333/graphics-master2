@@ -1185,8 +1185,21 @@ namespace graphics
                             {
                                 //BYT STAGE
                                 stage = generator.Next(1, 4);
-                                playerX = 345;
-                                playerY = 475;
+                                if (stage == 1)
+                                {
+                                    playerX = 345; //ÄNDRAR SPELARENS STARTPOSITION BEROENDE PÅ VILKEN STAGE SOM SLUMPAS
+                                    playerY = 475;
+                                }
+                                else if (stage == 2)
+                                {
+                                    playerX = 600;
+                                    playerY = 600;
+                                }
+                                else if (stage == 3)
+                                {
+                                    playerX = 1525;
+                                    playerY = 475;
+                                }
                             }
                         }
                         else
