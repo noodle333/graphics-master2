@@ -1,6 +1,4 @@
-﻿// ATT GÖRA
-
-
+﻿
 using System;
 using Raylib_cs;
 using System.Numerics;
@@ -331,7 +329,7 @@ namespace graphics
                     gameState = resultEnemy.gState;
 
                     //ENEMY COLLISION
-                    (float playX, float playY, float enemX, float enemY, bool pDead, string gState) resultCollision = EnemyCollision(playerX, playerY, enemyX, enemyY, playerDead, gameState);
+                    (float playX, float playY, float enemX, float enemY, bool pDead, string gState, int mStage) resultCollision = EnemyCollision(playerX, playerY, enemyX, enemyY, playerDead, gameState, stage);
 
                     playerX = resultCollision.playX;
                     playerY = resultCollision.playY;
@@ -339,6 +337,7 @@ namespace graphics
                     enemyY = resultCollision.enemY;
                     playerDead = resultCollision.pDead;
                     gameState = resultCollision.gState;
+                    stage = resultCollision.mStage;
 
                     if (playerDead == true)
                     {
@@ -734,7 +733,7 @@ namespace graphics
                     enemySpeed = resultEnemy.eS;
                     gameState = resultEnemy.gState;
                     //ENEMY COLLISION METHOD
-                    (float playX, float playY, float enemX, float enemY, bool pDead, string gState) resultCollision = EnemyCollision(playerX, playerY, enemyX, enemyY, playerDead, gameState);
+                    (float playX, float playY, float enemX, float enemY, bool pDead, string gState, int mStage) resultCollision = EnemyCollision(playerX, playerY, enemyX, enemyY, playerDead, gameState, stage);
 
                     playerX = resultCollision.playX;
                     playerY = resultCollision.playY;
@@ -742,6 +741,7 @@ namespace graphics
                     enemyY = resultCollision.enemY;
                     playerDead = resultCollision.pDead;
                     gameState = resultCollision.gState;
+                    stage = resultCollision.mStage;
                     //WHAT TO DO WHEN PLAYER DIES
                     if (playerDead == true)
                     {
@@ -1098,8 +1098,6 @@ namespace graphics
 
                     if (completed == true)
                     {
-                        playerX = 225;
-                        playerY = 475;
                         keyOneReady = true;
                         keyTwoReady = true;
                         keyThreeReady = true;
@@ -1109,8 +1107,8 @@ namespace graphics
                         gameState = "level_three";
                         level = "three";
                         completed = false;
-                        enemyY = 175;
-                        enemyX = 450;
+                        enemyY = 75;
+                        enemyX = 650;
                         playerCoins++;
                     }
                     if (Raylib.IsKeyPressed(KeyboardKey.KEY_TAB))
@@ -1138,7 +1136,7 @@ namespace graphics
                     gameState = resultEnemy.gState;
 
                     //ENEMY COLLISION
-                    (float playX, float playY, float enemX, float enemY, bool pDead, string gState) resultCollision = EnemyCollision(playerX, playerY, enemyX, enemyY, playerDead, gameState);
+                    (float playX, float playY, float enemX, float enemY, bool pDead, string gState, int mStage) resultCollision = EnemyCollision(playerX, playerY, enemyX, enemyY, playerDead, gameState, stage);
 
                     playerX = resultCollision.playX;
                     playerY = resultCollision.playY;
@@ -1146,19 +1144,7 @@ namespace graphics
                     enemyY = resultCollision.enemY;
                     playerDead = resultCollision.pDead;
                     gameState = resultCollision.gState;
-
-                    if (playerDead == true)
-                    {
-                        playerX = 225;
-                        playerY = 225;
-                        deaths++;
-                        keys = 0;
-                        keyOneReady = true;
-                        keyOneColor = Color.GOLD;
-                        keyTwoReady = true;
-                        keyTwoColor = Color.GOLD;
-                        playerDead = false;
-                    }
+                    stage = resultCollision.mStage;
 
                     Random generator = new Random();
 
@@ -1254,6 +1240,19 @@ namespace graphics
                         {
                             playerY = 900;
                         }
+
+                        if (playerDead == true)
+                        {
+                            playerX = 345;
+                            playerY = 475;
+                            deaths++;
+                            keys = 0;
+                            keyOneReady = true;
+                            keyOneColor = Color.GOLD;
+                            keyTwoReady = true;
+                            keyTwoColor = Color.GOLD;
+                            playerDead = false;
+                        }
                         Raylib.BeginDrawing();
                         Raylib.ClearBackground(Color.DARKGRAY);
 
@@ -1285,6 +1284,26 @@ namespace graphics
                         }
                         Raylib.DrawRectangle((int)playerX, (int)playerY, 50, 50, Color.BLACK);
                         Raylib.DrawRectangle((int)playerX + 5, (int)playerY + 5, 40, 40, playerColor);
+
+                        //RITA FIENDER STAGE 1
+                        Raylib.DrawCircle((int)enemyX + 20, (int)enemyY, 25, Color.BLACK); //OUTLINE
+                        Raylib.DrawCircle((int)enemyX + 20, (int)enemyY, 20, Color.RED);
+
+                        Raylib.DrawCircle((int)enemyX + 220, (int)enemyY, 25, Color.BLACK); //OUTLINE
+                        Raylib.DrawCircle((int)enemyX + 220, (int)enemyY, 20, Color.RED);
+
+                        Raylib.DrawCircle((int)enemyX + 420, (int)enemyY, 25, Color.BLACK); //OUTLINE
+                        Raylib.DrawCircle((int)enemyX + 420, (int)enemyY, 20, Color.RED);
+
+                        Raylib.DrawCircle((int)enemyX + 620, (int)enemyY, 25, Color.BLACK); //OUTLINE
+                        Raylib.DrawCircle((int)enemyX + 620, (int)enemyY, 20, Color.RED);
+
+                        Raylib.DrawCircle((int)enemyX + 820, (int)enemyY, 25, Color.BLACK); //OUTLINE
+                        Raylib.DrawCircle((int)enemyX + 820, (int)enemyY, 20, Color.RED);
+
+                        Raylib.DrawCircle((int)enemyX + 1020, (int)enemyY, 25, Color.BLACK); //OUTLINE
+                        Raylib.DrawCircle((int)enemyX + 1020, (int)enemyY, 20, Color.RED);
+
                         Raylib.EndDrawing();
                     }
                     else if (stage == 2)
@@ -1383,6 +1402,25 @@ namespace graphics
 
                         Raylib.DrawRectangle((int)playerX, (int)playerY, 50, 50, Color.BLACK);
                         Raylib.DrawRectangle((int)playerX + 5, (int)playerY + 5, 40, 40, playerColor);
+
+                        Raylib.DrawCircle((int)enemyX - 400, (int)enemyY, 25, Color.BLACK); //OUTLINE
+                        Raylib.DrawCircle((int)enemyX - 400, (int)enemyY, 20, Color.RED);
+
+                        Raylib.DrawCircle((int)enemyX - 200, (int)enemyY, 25, Color.BLACK); //OUTLINE
+                        Raylib.DrawCircle((int)enemyX - 200, (int)enemyY, 20, Color.RED);
+
+                        Raylib.DrawCircle((int)enemyX, (int)enemyY, 25, Color.BLACK); //OUTLINE
+                        Raylib.DrawCircle((int)enemyX, (int)enemyY, 20, Color.RED);
+
+                        Raylib.DrawCircle((int)enemyX + 200, (int)enemyY, 25, Color.BLACK); //OUTLINE
+                        Raylib.DrawCircle((int)enemyX + 200, (int)enemyY, 20, Color.RED);
+
+                        Raylib.DrawCircle((int)enemyX + 400, (int)enemyY, 25, Color.BLACK); //OUTLINE
+                        Raylib.DrawCircle((int)enemyX + 400, (int)enemyY, 20, Color.RED);
+
+                        Raylib.DrawCircle((int)enemyX + 600, (int)enemyY, 25, Color.BLACK); //OUTLINE
+                        Raylib.DrawCircle((int)enemyX + 600, (int)enemyY, 20, Color.RED);
+
                         Raylib.EndDrawing();
                     }
                     if (Raylib.IsKeyPressed(KeyboardKey.KEY_TAB))
@@ -1654,9 +1692,21 @@ namespace graphics
                 }
                 eY += eS;
             }
+            else if (gState == "level_three")
+            {
+                if (eY <= 75)
+                {
+                    eS = 2.2f;
+                }
+                else if (eY >= 925)
+                {
+                    eS = -2.2f;
+                }
+                eY += eS;
+            }
             return (eY, eS, gState);
         }
-        static (float, float, float, float, bool, string) EnemyCollision(float playX, float playY, float enemX, float enemY, bool pDead, string gState)
+        static (float, float, float, float, bool, string, int) EnemyCollision(float playX, float playY, float enemX, float enemY, bool pDead, string gState, int mStage)
         {
             if (gState == "level_one")
             {
@@ -1704,7 +1754,37 @@ namespace graphics
                     pDead = true;
                 }
             }
-            return (playX, playY, enemX, enemY, pDead, gState);
+            else if (gState == "level_three")
+            {
+                if (mStage == 1)
+                {
+                    if (enemX + 20 - playX <= 75 && enemX + 20 - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
+                    {
+                        pDead = true;
+                    }
+                    else if (enemX + 220 - playX <= 75 && enemX + 220 - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
+                    {
+                        pDead = true;
+                    }
+                    else if (enemX + 420 - playX <= 75 && enemX + 420 - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
+                    {
+                        pDead = true;
+                    }
+                    else if (enemX + 620 - playX <= 75 && enemX + 620 - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
+                    {
+                        pDead = true;
+                    }
+                    else if (enemX + 820 - playX <= 75 && enemX + 820 - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
+                    {
+                        pDead = true;
+                    }
+                    else if (enemX + 1020 - playX <= 75 && enemX + 1020 - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
+                    {
+                        pDead = true;
+                    }
+                }
+            }
+            return (playX, playY, enemX, enemY, pDead, gState, mStage);
         }
         static (int, string, int) MenuTarget(int mnTarget, string mngState, int mnStage)
         {
