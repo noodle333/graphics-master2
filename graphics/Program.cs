@@ -35,7 +35,6 @@ namespace graphics
             int playerCoins = 0;
             float playerSpeed = 0.6f;
 
-
             //GAME VALUES
             int deaths = 0;
             int keys = 0;
@@ -57,7 +56,7 @@ namespace graphics
             bool playerDead = false;
 
             //LEVEL, STATE AND GOAL VALUES
-            string level = "three";
+            string level = "one";
             string gameState = "level_three";
             bool completed = false;
 
@@ -595,9 +594,16 @@ namespace graphics
                     Raylib.ClearBackground(Color.PURPLE);
                     bool count = true;
 
-                    //DEATH COUNTER
-                    Raylib.DrawText("DEATHS: " + deaths, 100, 40, 32, Color.BLACK);
-                    Raylib.DrawText("COINS: " + playerCoins, 400, 40, 32, Color.BLACK);
+                    //GUI LEVEL ONE
+                    Raylib.DrawRectangle(0, 0, 1950, 50, Color.BLACK);
+                    Raylib.DrawText("KEYS: ", 50, 10, 32, Color.WHITE);
+                    Raylib.DrawRectangle(170, 12, 25, 25, keyOneColor);
+                    Raylib.DrawRectangle(220, 12, 25, 25, keyTwoColor);
+                    Raylib.DrawText("DEATHS: " + deaths, 375, 10, 32, Color.WHITE);
+                    Raylib.DrawText("COINS: " + playerCoins, 675, 10, 32, Color.WHITE);
+                    Raylib.DrawText("COLOR: ", 975, 10, 32, Color.WHITE);
+                    Raylib.DrawRectangle(1125, 12, 25, 25, playerColor);
+
                     //RUTNÄT
                     //LOOPA MEDANS Y ÄR MELLAN 200 OCH 800 MED 100 ADDITION PER LOOP.
                     for (int y = 200; y < 800; y += 100)
@@ -936,9 +942,6 @@ namespace graphics
                         completed = true; //SKAPA GAME STATE 3 MED SCROLLANDE BILDER SOM ILLUSION AV KAMERA
                         //ALLTING I EN VARIABEL OCH NÄR MAN KLICKAR A SÅ SKROLLAS BILDERNA ÅT VÄNSTER.
                     }
-
-
-
                     //SPAWN VÄGGAR
                     Raylib.DrawRectangle(80, 330, 320, 20, wallColor);
                     Raylib.DrawRectangle(80, 350, 20, 300, wallColor);
@@ -1092,8 +1095,16 @@ namespace graphics
                         }
                     }
 
-                    Raylib.DrawText("DEATHS: " + deaths, 100, 40, 32, Color.WHITE);
-                    Raylib.DrawText("COINS: " + playerCoins, 400, 40, 32, Color.WHITE);
+                    //GUI LEVEL TWO
+                    Raylib.DrawRectangle(0, 0, 1950, 50, Color.RED);
+                    Raylib.DrawText("KEYS: ", 50, 10, 32, Color.BLACK);
+                    Raylib.DrawRectangle(170, 12, 25, 25, keyOneColor);
+                    Raylib.DrawRectangle(220, 12, 25, 25, keyTwoColor);
+                    Raylib.DrawRectangle(270, 12, 25, 25, keyThreeColor);
+                    Raylib.DrawText("DEATHS: " + deaths, 375, 10, 32, Color.BLACK);
+                    Raylib.DrawText("COINS: " + playerCoins, 675, 10, 32, Color.BLACK);
+                    Raylib.DrawText("COLOR: ", 975, 10, 32, Color.BLACK);
+                    Raylib.DrawRectangle(1125, 12, 25, 25, playerColor);
                     Raylib.EndDrawing();
 
                     if (completed == true)
@@ -1251,6 +1262,8 @@ namespace graphics
                             keyOneColor = Color.GOLD;
                             keyTwoReady = true;
                             keyTwoColor = Color.GOLD;
+                            keyThreeColor = Color.GOLD;
+                            keyThreeReady = true;
                             playerDead = false;
                         }
                         Raylib.BeginDrawing();
@@ -1304,6 +1317,15 @@ namespace graphics
                         Raylib.DrawCircle((int)enemyX + 1020, (int)enemyY, 25, Color.BLACK); //OUTLINE
                         Raylib.DrawCircle((int)enemyX + 1020, (int)enemyY, 20, Color.RED);
 
+                        //GUI LEVEL THREE
+                        Raylib.DrawText("KEYS: ", 50, 10, 32, Color.WHITE);
+                        Raylib.DrawRectangle(170, 12, 25, 25, keyOneColor);
+                        Raylib.DrawRectangle(220, 12, 25, 25, keyTwoColor);
+                        Raylib.DrawRectangle(270, 12, 25, 25, keyThreeColor);
+                        Raylib.DrawText("DEATHS: " + deaths, 375, 10, 32, Color.WHITE);
+                        Raylib.DrawText("COINS: " + playerCoins, 675, 10, 32, Color.WHITE);
+                        Raylib.DrawText("COLOR: ", 975, 10, 32, Color.WHITE);
+                        Raylib.DrawRectangle(1125, 12, 25, 25, playerColor);
                         Raylib.EndDrawing();
                     }
                     else if (stage == 2)
@@ -1329,6 +1351,17 @@ namespace graphics
                         }
                         Raylib.BeginDrawing();
                         Raylib.ClearBackground(Color.DARKGRAY);
+
+                        //GUI LEVEL THREE
+                        Raylib.DrawText("KEYS: ", 50, 10, 32, Color.WHITE);
+                        Raylib.DrawRectangle(170, 12, 25, 25, keyOneColor);
+                        Raylib.DrawRectangle(220, 12, 25, 25, keyTwoColor);
+                        Raylib.DrawRectangle(270, 12, 25, 25, keyThreeColor);
+                        Raylib.DrawText("DEATHS: " + deaths, 375, 10, 32, Color.WHITE);
+                        Raylib.DrawText("COINS: " + playerCoins, 675, 10, 32, Color.WHITE);
+                        Raylib.DrawText("COLOR: ", 975, 10, 32, Color.WHITE);
+                        Raylib.DrawRectangle(1125, 12, 25, 25, playerColor);
+
                         for (int y = 50; y < 950; y += 100)
                         {
                             //VARJE Y LOOPA X MELLAN 500 OCH 1400 MED 100 ADDITION PER LOOP
@@ -1350,6 +1383,28 @@ namespace graphics
                         }
                         Raylib.DrawRectangle((int)playerX, (int)playerY, 50, 50, Color.BLACK);
                         Raylib.DrawRectangle((int)playerX + 5, (int)playerY + 5, 40, 40, playerColor);
+
+
+                        Raylib.DrawCircle((int)enemyX - 350, (int)enemyY, 25, Color.BLACK); //OUTLINE
+                        Raylib.DrawCircle((int)enemyX - 350, (int)enemyY, 20, Color.RED);
+
+                        Raylib.DrawCircle((int)enemyX - 150, (int)enemyY, 25, Color.BLACK); //OUTLINE
+                        Raylib.DrawCircle((int)enemyX - 150, (int)enemyY, 20, Color.RED);
+
+                        Raylib.DrawCircle((int)enemyX + 50, (int)enemyY, 25, Color.BLACK); //OUTLINE
+                        Raylib.DrawCircle((int)enemyX + 50, (int)enemyY, 20, Color.RED);
+
+                        Raylib.DrawCircle((int)enemyX + 350, (int)enemyY, 25, Color.BLACK); //OUTLINE
+                        Raylib.DrawCircle((int)enemyX + 350, (int)enemyY, 20, Color.RED);
+
+                        Raylib.DrawCircle((int)enemyX + 550, (int)enemyY, 25, Color.BLACK); //OUTLINE
+                        Raylib.DrawCircle((int)enemyX + 550, (int)enemyY, 20, Color.RED);
+
+                        Raylib.DrawCircle((int)enemyX + 750, (int)enemyY, 25, Color.BLACK); //OUTLINE
+                        Raylib.DrawCircle((int)enemyX + 750, (int)enemyY, 20, Color.RED);
+
+                        Raylib.DrawCircle((int)enemyX + 950, (int)enemyY, 25, Color.BLACK); //OUTLINE
+                        Raylib.DrawCircle((int)enemyX + 950, (int)enemyY, 20, Color.RED);
                         Raylib.EndDrawing();
                     }
                     //STAGE 3
@@ -1372,8 +1427,34 @@ namespace graphics
                         {
                             playerY = 900;
                         }
+                        //PLAYERDEAD
+                        if (playerDead == true)
+                        {
+                            playerX = 1525;
+                            playerY = 475;
+                            deaths++;
+                            keys = 0;
+                            keyOneReady = true;
+                            keyOneColor = Color.GOLD;
+                            keyTwoReady = true;
+                            keyTwoColor = Color.GOLD;
+                            keyThreeColor = Color.GOLD;
+                            keyThreeReady = true;
+                            playerDead = false;
+                        }
                         Raylib.BeginDrawing();
                         Raylib.ClearBackground(Color.DARKGRAY);
+
+                        //GUI LEVEL THREE
+                        Raylib.DrawText("KEYS: ", 50, 10, 32, Color.WHITE);
+                        Raylib.DrawRectangle(170, 12, 25, 25, keyOneColor);
+                        Raylib.DrawRectangle(220, 12, 25, 25, keyTwoColor);
+                        Raylib.DrawRectangle(270, 12, 25, 25, keyThreeColor);
+                        Raylib.DrawText("DEATHS: " + deaths, 375, 10, 32, Color.WHITE);
+                        Raylib.DrawText("COINS: " + playerCoins, 675, 10, 32, Color.WHITE);
+                        Raylib.DrawText("COLOR: ", 975, 10, 32, Color.WHITE);
+                        Raylib.DrawRectangle(1125, 12, 25, 25, playerColor);
+
                         for (int y = 50; y < 950; y += 100)
                         {
                             for (int x = 0; x < 1900; x += 100)
@@ -1420,7 +1501,6 @@ namespace graphics
 
                         Raylib.DrawCircle((int)enemyX + 600, (int)enemyY, 25, Color.BLACK); //OUTLINE
                         Raylib.DrawCircle((int)enemyX + 600, (int)enemyY, 20, Color.RED);
-
                         Raylib.EndDrawing();
                     }
                     if (Raylib.IsKeyPressed(KeyboardKey.KEY_TAB))
@@ -1779,6 +1859,33 @@ namespace graphics
                         pDead = true;
                     }
                     else if (enemX + 1020 - playX <= 75 && enemX + 1020 - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
+                    {
+                        pDead = true;
+                    }
+                }
+                if (mStage == 3)
+                {
+                    if (enemX - 400 - playX <= 75 && enemX - 400 - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
+                    {
+                        pDead = true;
+                    }
+                    else if (enemX - 200 - playX <= 75 && enemX - 200 - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
+                    {
+                        pDead = true;
+                    }
+                    else if (enemX - playX <= 75 && enemX - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
+                    {
+                        pDead = true;
+                    }
+                    else if (enemX + 200 - playX <= 75 && enemX + 200 - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
+                    {
+                        pDead = true;
+                    }
+                    else if (enemX + 400 - playX <= 75 && enemX + 400 - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
+                    {
+                        pDead = true;
+                    }
+                    else if (enemX + 600 - playX <= 75 && enemX + 600 - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
                     {
                         pDead = true;
                     }
