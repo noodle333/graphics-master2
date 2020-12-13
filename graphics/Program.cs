@@ -1,4 +1,8 @@
-﻿using System;
+﻿//ATT GÖRA
+//LÄGG TILL MUSIK
+//LÄGG TILL ETT SKIN
+
+using System;
 using Raylib_cs;
 using System.Numerics;
 
@@ -69,7 +73,7 @@ namespace graphics
 
             //LEVEL, STATE AND GOAL VALUES
             string level = "one";
-            string gameState = "level_three";
+            string gameState = "intro";
             bool completed = false;
 
             //MENU COLOR VALUES
@@ -112,6 +116,9 @@ namespace graphics
             Color playerColor = Color.PURPLE;
             Color[] playerColors = { Color.RED, Color.BEIGE, Color.BLACK, Color.SKYBLUE, Color.GRAY, Color.GREEN, Color.LIME, Color.MAGENTA, Color.ORANGE, Color.ORANGE, Color.PINK, Color.PURPLE, Color.YELLOW, Color.WHITE };
             int playerArrayIndex = 0;
+
+            //MUSIC VALUES
+
 
             Raylib.SetTargetFPS(450); //KONTROLLERA FPS FÖR ATT SPELARENS HASTIGHET ÄR BEROENDE AV DEN
 
@@ -267,7 +274,7 @@ namespace graphics
                         menuExitColor = Color.BLACK;
                         if (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) || Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER))
                         {
-                            Raylib.CloseWindow();
+                            break;
                         }
                     }
                     else
@@ -1281,9 +1288,9 @@ namespace graphics
                     {
                         //GRAFIK
                         Raylib.BeginDrawing();
-                        Raylib.ClearBackground(Color.BLACK);
-                        Raylib.DrawText("Are you sure you want to continiue?", 600, 200, 32, Color.WHITE);
-                        Raylib.DrawText("This last level is kind of difficult.", 600, 250, 32, Color.WHITE);
+                        Raylib.ClearBackground(Color.YELLOW);
+                        Raylib.DrawText("Are you sure you want to continiue?", 600, 200, 32, Color.BLACK);
+                        Raylib.DrawText("This last level is kind of difficult.", 600, 250, 32, Color.BLACK);
                         Raylib.DrawText("CONTINIUE", 600, 300, 24, menuResumeColor);
                         Raylib.DrawText("MAIN MENU", 800, 300, 24, menuExitColor);
                         Raylib.DrawText("SHOP", 1000, 300, 24, menuShopColor);
@@ -1295,7 +1302,7 @@ namespace graphics
                         //KOLLA VAR DEN ÄR OCH VAD DEN VILL GÖRA
                         if (menuTarget == 1)
                         {
-                            menuResumeColor = Color.WHITE;
+                            menuResumeColor = Color.BLACK;
                             if (Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER) || Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE))
                             {
                                 //SÄTT NYA VÄRDEN PÅ NYCKLAR
@@ -1321,6 +1328,8 @@ namespace graphics
                                     playerX = 1525;
                                     playerY = 475;
                                 }
+                                bossX = 250;
+                                bossY = 60;
                             }
                         }
                         else
@@ -1329,7 +1338,7 @@ namespace graphics
                         }
                         if (menuTarget == 2)
                         {
-                            menuExitColor = Color.WHITE;
+                            menuExitColor = Color.BLACK;
                             if (Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER) || Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE))
                             {
                                 gameState = "intro";
@@ -1342,7 +1351,7 @@ namespace graphics
                         }
                         if (menuTarget == 3)
                         {
-                            menuShopColor = Color.WHITE;
+                            menuShopColor = Color.BLACK;
                             if (Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER) || Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE))
                             {
                                 gameState = "shop";
