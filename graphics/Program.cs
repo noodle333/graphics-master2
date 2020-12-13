@@ -23,6 +23,12 @@ namespace graphics
             Texture2D barrierTwo = Raylib.LoadTexture("barrier_level2.png");
             Texture2D barrierThree = Raylib.LoadTexture("barrier_level_three.png");
 
+            //ENDING VALUES
+
+            //SHOP VALUES AND IMAGES
+            Texture2D speedImage = Raylib.LoadTexture("speedimage.png");
+            float speedImageSize = 0.5f;
+
             //BACKGROUND SCROLL VALUES
             float scrollThird = 0.0f;
             float scrollSecond = 0.0f;
@@ -54,10 +60,14 @@ namespace graphics
             float enemyY = 225;
             float enemySpeed = 1.2f;
             bool playerDead = false;
+            float bossX = 375;
+            float bossY = 50;
+            float bossSpeedX = 2.6f;
+            float bossSpeedY = 2.2f;
 
             //LEVEL, STATE AND GOAL VALUES
             string level = "one";
-            string gameState = "intro";
+            string gameState = "level_three";
             bool completed = false;
 
             //MENU COLOR VALUES
@@ -1157,25 +1167,111 @@ namespace graphics
                     gameState = resultCollision.gState;
                     stage = resultCollision.mStage;
 
-                    if (keyOneX - playerX > -50 && keyOneX - playerX < 50 && keyOneY - playerY > -50 && keyOneY - playerY < 50 && keyOneReady == true)
+                    if (keyOneX - playerX > -50 && keyOneX - playerX < 50 && keyOneY - playerY > -50 && keyOneY - playerY < 50 && keyOneReady == true && stage == 1)
                     {
                         keys++;
                         keyOneColor = Color.GREEN;
                         keyOneReady = false;
                     }
 
-                    else if (keyTwoX - playerX > -50 && keyTwoX - playerX < 50 && keyTwoY - playerY > -50 && keyTwoY - playerY < 50 && keyTwoReady == true)
+                    else if (keyTwoX - playerX > -50 && keyTwoX - playerX < 50 && keyTwoY - playerY > -50 && keyTwoY - playerY < 50 && keyTwoReady == true && stage == 2)
                     {
                         keys++;
                         keyTwoColor = Color.GREEN;
                         keyTwoReady = false;
                     }
-                    else if (keyThreeX - playerX > -50 && keyThreeX - playerX < 50 && keyThreeY - playerY > -50 && keyThreeY - playerY < 50 && keyThreeReady == true)
+                    else if (keyThreeX - playerX > -50 && keyThreeX - playerX < 50 && keyThreeY - playerY > -50 && keyThreeY - playerY < 50 && keyThreeReady == true && stage == 3)
                     {
                         keys++;
                         keyThreeColor = Color.GREEN;
                         keyThreeReady = false;
                     }
+
+                    //BOSS COLLISION
+                    if (stage == 1)
+                    {
+                        if (bossY <= 75)
+                        {
+                            bossSpeedY = 1.4f;
+                        }
+                        else if (bossY >= 925)
+                        {
+                            bossSpeedY = -1.4f;
+                        }
+                        if (bossX <= 45)
+                        {
+                            bossSpeedX = 1.8f;
+                        }
+                        else if (bossX >= 1895)
+                        {
+                            bossSpeedX = -1.8f;
+                        }
+                    }
+                    else if (stage == 2)
+                    {
+                        if (bossY <= 75)
+                        {
+                            bossSpeedY = 1.4f;
+                        }
+                        else if (bossY >= 925)
+                        {
+                            bossSpeedY = -1.4f;
+                        }
+                        if (bossX <= 25)
+                        {
+                            bossSpeedX = 1.8f;
+                        }
+                        else if (bossX >= 1895)
+                        {
+                            bossSpeedX = -1.8f;
+                        }
+                        //COLLISION MED SLUT
+                        if (bossY >= 350 && bossY <= 650 && bossX >= 740 && bossX <= 745)
+                        {
+                            bossSpeedX = -1.8f;
+                        }
+                        else if (bossY >= 350 && bossY <= 650 && bossX <= 990 && bossX >= 985)
+                        {
+                            bossSpeedX = 1.8f;
+                        }
+                        if (bossX >= 765 && bossX <= 965 && bossY >= 325 && bossY <= 330)
+                        {
+                            bossSpeedY = -1.4f;
+                        }
+                        else if (bossX >= 765 && bossX <= 965 && bossY <= 675 && bossY >= 670)
+                        {
+                            bossSpeedY = 1.4f;
+                        }
+
+                    }
+                    else if (stage == 3)
+                    {
+                        if (bossY <= 75)
+                        {
+                            bossSpeedY = 1.4f;
+                        }
+                        else if (bossY >= 925)
+                        {
+                            bossSpeedY = -1.4f;
+                        }
+                        if (bossX <= 25)
+                        {
+                            bossSpeedX = 1.8f;
+                        }
+                        else if (bossX >= 1875)
+                        {
+                            bossSpeedX = -1.8f;
+                        }
+                    }
+                    bossX += bossSpeedX;
+                    bossY += bossSpeedY;
+
+                    //BOSS OCH SPELARE KOLLISION
+                    if (bossX - playerX <= 75 && bossX - playerX >= -25 && bossY - playerY <= 75 && bossY - playerY >= -25)
+                    {
+                        playerDead = true;
+                    }
+
 
                     Random generator = new Random();
 
@@ -1201,8 +1297,10 @@ namespace graphics
                             if (Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER) || Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE))
                             {
                                 //SÄTT NYA VÄRDEN PÅ NYCKLAR
-
-
+                                keyOneX = 1045;
+                                keyOneY = 275;
+                                keyTwoX = 990;
+                                keyTwoY = 475;
                                 keyThreeX = 825;
                                 //BYT STAGE
                                 stage = generator.Next(1, 4);
@@ -1345,6 +1443,10 @@ namespace graphics
                         Raylib.DrawCircle((int)enemyX + 1020, (int)enemyY, 25, Color.BLACK); //OUTLINE
                         Raylib.DrawCircle((int)enemyX + 1020, (int)enemyY, 20, Color.RED);
 
+                        //RITA BOSS 
+                        Raylib.DrawCircle((int)bossX, (int)bossY, 25, Color.BLACK); //OUTLINE
+                        Raylib.DrawCircle((int)bossX, (int)bossY, 20, Color.PURPLE);
+
                         //GUI LEVEL THREE
                         Raylib.DrawText("KEYS: ", 50, 10, 32, Color.WHITE);
                         Raylib.DrawRectangle(170, 12, 25, 25, keyOneColor);
@@ -1427,7 +1529,8 @@ namespace graphics
                             }
                         }
                         //RITA UT MÅL
-                        Raylib.DrawRectangle(765, 350, 200, 300, Color.GREEN);
+                        Raylib.DrawRectangle(765, 350, 200, 300, Color.DARKGRAY);
+                        Raylib.DrawText("THE END", 790, 470, 32, Color.WHITE);
                         //RITA UT BORDER OCH SKAPA COLLISION OM SPELAREN INTE HAR ALLA NYCKLAR
                         if (keys != 3)
                         {
@@ -1483,7 +1586,25 @@ namespace graphics
 
                         Raylib.DrawCircle((int)enemyX + 965, (int)enemyY, 25, Color.BLACK); //OUTLINE
                         Raylib.DrawCircle((int)enemyX + 965, (int)enemyY, 20, Color.RED);
+                        //RITA BOSS STAGE 2
+                        Raylib.DrawCircle((int)bossX, (int)bossY, 25, Color.BLACK); //OUTLINE
+                        Raylib.DrawCircle((int)bossX, (int)bossY, 20, Color.PURPLE);
+
                         Raylib.EndDrawing();
+
+                        //TITTA OM SPELAREN HAR KLARAT NIVÅN
+                        if (keys == 3)
+                        {
+                            if (playerX > 765 && playerX < 915 && playerY > 350 && playerY < 600)
+                            {
+                                completed = true;
+                            }
+                        }
+
+                        if (completed == true)
+                        {
+                            gameState = "ending";
+                        }
                     }
                     //STAGE 3
                     else if (stage == 3)
@@ -1582,6 +1703,10 @@ namespace graphics
 
                         Raylib.DrawCircle((int)enemyX + 600, (int)enemyY, 25, Color.BLACK); //OUTLINE
                         Raylib.DrawCircle((int)enemyX + 600, (int)enemyY, 20, Color.RED);
+                        //RITA BOSS STAGE 3
+                        Raylib.DrawCircle((int)bossX, (int)bossY, 25, Color.BLACK); //OUTLINE
+                        Raylib.DrawCircle((int)bossX, (int)bossY, 20, Color.PURPLE);
+
                         Raylib.EndDrawing();
                     }
 
@@ -1602,7 +1727,18 @@ namespace graphics
                     {
                         stage = 3;
                     }
+                    if (Raylib.IsKeyPressed(KeyboardKey.KEY_K))
+                    {
+                        keys = 3;
+                    }
                 }
+                if (gameState == "ending")
+                {
+                    Raylib.BeginDrawing();
+                    Raylib.ClearBackground(Color.WHITE);
+                    Raylib.EndDrawing();
+                }
+
                 if (gameState == "pause")
                 {
                     (int mnTarget, string mngState, int mnStage) resultMenu = MenuTarget(menuTarget, gameState, stage);
@@ -1706,7 +1842,7 @@ namespace graphics
 
                     if (menuTarget == 1)
                     {
-                        menuResumeColor = Color.WHITE;
+                        menuResumeColor = Color.BLACK;
                         if (Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER) || Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE))
                         {
                             gameState = "level_" + level;
@@ -1715,6 +1851,14 @@ namespace graphics
                     else
                     {
                         menuResumeColor = Color.GRAY;
+                    }
+                    if (menuTarget == 2)
+                    {
+                        speedImageSize = 0.6f;
+                    }
+                    else
+                    {
+                        speedImageSize = 0.5f;
                     }
                     if (menuTarget == 2 && speedBought == false)
                     {
@@ -1728,7 +1872,7 @@ namespace graphics
                                 speedBought = true;
                             }
                         }
-                        menuExitColor = Color.WHITE;
+                        menuExitColor = Color.BLACK;
                     }
                     else if (speedBought == true && menuTarget == 2)
                     {
@@ -1744,7 +1888,7 @@ namespace graphics
                     }
                     if (menuTarget == 3 && skinBought == false)
                     {
-                        menuOptionsColor = Color.WHITE;
+                        menuOptionsColor = Color.BLACK;
                         if (Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER) || Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE))
                         {
                             if (playerCoins >= 1)
@@ -1768,16 +1912,16 @@ namespace graphics
                     {
                         menuOptionsColor = Color.GRAY;
                     }
-                    //GÖR TEXTUR TILL BILDERNA FÖR SPEED SAMT SKIN
-
                     //GRAFIK
                     Raylib.BeginDrawing();
-                    Raylib.ClearBackground(Color.BLACK);
+                    Raylib.ClearBackground(Color.PURPLE);
                     //TEXT
-                    Raylib.DrawText("COINS: " + playerCoins, 200, 100, 32, Color.WHITE);
+                    Raylib.DrawText("COINS: " + playerCoins, 200, 100, 32, Color.BLACK);
                     Raylib.DrawText("BACK", 200, 200, 32, menuResumeColor);
                     Raylib.DrawText("SPEED UPGRADE", 500, 200, 32, menuExitColor);
                     Raylib.DrawText("SKIN UPGRADE", 1000, 200, 32, menuOptionsColor);
+                    //IMAGES
+                    Raylib.DrawTextureEx(speedImage, new Vector2(520, 300), 0.0f, speedImageSize, Color.WHITE);
                     Raylib.EndDrawing();
                 }
             }
@@ -1958,10 +2102,38 @@ namespace graphics
                         pDead = true;
                     }
                 }
-                // else if (mStage == 2)
-                // {
+                else if (mStage == 2)
+                {
+                    if (enemX - 335 - playX <= 75 && enemX - 335 - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
+                    {
+                        pDead = true;
+                    }
+                    else if (enemX - 135 - playX <= 75 && enemX - 135 - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
+                    {
+                        pDead = true;
+                    }
+                    else if (enemX + 65 - playX <= 75 && enemX + 65 - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
+                    {
+                        pDead = true;
+                    }
+                    else if (enemX + 365 - playX <= 75 && enemX + 365 - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
+                    {
+                        pDead = true;
+                    }
+                    else if (enemX + 565 - playX <= 75 && enemX + 565 - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
+                    {
+                        pDead = true;
+                    }
+                    else if (enemX + 765 - playX <= 75 && enemX + 765 - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
+                    {
+                        pDead = true;
+                    }
+                    else if (enemX + 965 - playX <= 75 && enemX + 965 - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
+                    {
+                        pDead = true;
+                    }
 
-                // }
+                }
                 else if (mStage == 3)
                 {
                     if (enemX - 400 - playX <= 75 && enemX - 400 - playX >= -25 && enemY - playY <= 75 && enemY - playY >= -25)
