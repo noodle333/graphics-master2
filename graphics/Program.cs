@@ -24,6 +24,8 @@ namespace graphics
             Texture2D barrierThree = Raylib.LoadTexture("barrier_level_three.png");
 
             //ENDING VALUES
+            float endingTextPosition = 1000;
+            Color skipColor = Color.BLACK;
 
             //SHOP VALUES AND IMAGES
             Texture2D speedImage = Raylib.LoadTexture("speedimage.png");
@@ -1603,7 +1605,9 @@ namespace graphics
 
                         if (completed == true)
                         {
+                            menuTarget = 1;
                             gameState = "ending";
+                            completed = false;
                         }
                     }
                     //STAGE 3
@@ -1714,29 +1718,90 @@ namespace graphics
                     {
                         gameState = "pause";
                     }
-                    //TEMPORÄR DEBUGGING FUNKTION
-                    if (Raylib.IsKeyPressed(KeyboardKey.KEY_ONE))
-                    {
-                        stage = 1;
-                    }
-                    else if (Raylib.IsKeyPressed(KeyboardKey.KEY_TWO))
-                    {
-                        stage = 2;
-                    }
-                    else if (Raylib.IsKeyPressed(KeyboardKey.KEY_THREE))
-                    {
-                        stage = 3;
-                    }
-                    if (Raylib.IsKeyPressed(KeyboardKey.KEY_K))
-                    {
-                        keys = 3;
-                    }
                 }
                 if (gameState == "ending")
                 {
                     Raylib.BeginDrawing();
                     Raylib.ClearBackground(Color.WHITE);
+                    //SCROLLING END CREDITS
+                    Raylib.DrawText("You completed the game!", 350, (int)endingTextPosition, 64, Color.BLACK);
+                    Raylib.DrawText("Thank you for playing and I hope you enjoyed it.", 350, (int)endingTextPosition + 200, 48, Color.BLACK);
+                    Raylib.DrawText("Graphics created by:", 350, (int)endingTextPosition + 300, 32, Color.BLACK);
+                    Raylib.DrawText("noodle3", 350, (int)endingTextPosition + 375, 32, Color.BLACK);
+                    Raylib.DrawText("Music created by:", 350, (int)endingTextPosition + 475, 32, Color.BLACK);
+                    Raylib.DrawText("noodle3", 350, (int)endingTextPosition + 550, 32, Color.BLACK);
+                    Raylib.DrawText("Graphics and game content created by:", 350, (int)endingTextPosition + 650, 32, Color.BLACK);
+                    Raylib.DrawText("noodle3", 350, (int)endingTextPosition + 725, 32, Color.BLACK);
+                    //SKIP 
+                    Raylib.DrawText("SKIP [ C ]", 1830, 950, 16, skipColor);
+                    if (Raylib.IsKeyPressed(KeyboardKey.KEY_C) && endingTextPosition > -725)
+                    {
+                        endingTextPosition = -725;
+                        skipColor = Color.WHITE;
+                    }
+                    if (endingTextPosition < -725)
+                    {
+                        Raylib.DrawText("Play again", 350, 450, 32, menuResumeColor);
+                        Raylib.DrawText("Exit", 550, 450, 32, menuExitColor);
+                        //MENU MOVEMENT FÖR SLUT MENYN
+                        if (Raylib.IsKeyPressed(KeyboardKey.KEY_A))
+                        {
+                            if (menuTarget == 1)
+                            {
+                                menuTarget = 2;
+                            }
+                            else
+                            {
+                                menuTarget--;
+                            }
+                        }
+                        else if (Raylib.IsKeyPressed(KeyboardKey.KEY_D))
+                        {
+                            if (menuTarget == 2)
+                            {
+                                menuTarget = 1;
+                            }
+                            else
+                            {
+                                menuTarget++;
+                            }
+                        }
+
+                        if (menuTarget == 1)
+                        {
+                            menuResumeColor = Color.BLACK;
+                            if (Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER) || Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE))
+                            {
+                                gameState = "intro";
+                                playerCoins = 0;
+                                deaths = 0;
+                                speedBought = false;
+                                skinBought = false;
+                            }
+                        }
+                        else
+                        {
+                            menuResumeColor = Color.GRAY;
+                        }
+                        if (menuTarget == 2)
+                        {
+                            menuExitColor = Color.BLACK;
+                            if (Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER) || Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE))
+                            {
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            menuExitColor = Color.GRAY;
+                        }
+
+
+                    }
+
                     Raylib.EndDrawing();
+
+                    endingTextPosition -= 0.1f;
                 }
 
                 if (gameState == "pause")
