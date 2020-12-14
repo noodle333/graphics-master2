@@ -1,5 +1,5 @@
 ﻿//ATT GÖRA
-//LÄGG TILL MUSIK
+//LÄGG TILL MUSIK OCH RITA UT TRACK 1/2/3 I INTRO MENYN.
 //LÄGG TILL ETT SKIN
 
 using System;
@@ -12,11 +12,9 @@ namespace graphics
     {
         static void Main(string[] args)
         {
-            //FRÅGA MICKE OM RANDOMIZED RUM SÅ POSITIONERNA FÖLJER MED.
             const int screenWidth = 1920;
             const int screenHeight = 1000;
             Raylib.InitWindow(screenWidth, screenHeight, "GAME");
-
             //BACKGROUND IMAGES
             Texture2D thirdBackground = Raylib.LoadTexture("thirdbackground.png");
             Texture2D secondBackground = Raylib.LoadTexture("secondbackground.png");
@@ -166,7 +164,7 @@ namespace graphics
                     Raylib.DrawText("(PRESS TAB WHILE IN GAME TO PAUSE)", 200, 250, 16, Color.BLACK);
                     Raylib.DrawText("NEW GAME", 170, 300, 24, menuResumeColor);
                     Raylib.DrawText("OPTIONS", 170, 350, 24, menuOptionsColor);
-                    Raylib.DrawText("SHOP", 170, 400, 24, menuShopColor);
+                    Raylib.DrawText("CONTROLS", 170, 400, 24, menuShopColor);
                     Raylib.DrawText("EXIT", 170, 450, 24, menuExitColor);
 
                     if (menuOptionsState == false)
@@ -259,11 +257,13 @@ namespace graphics
                     }
                     if (menuTarget == 3)
                     {
+                        //CONTROLS MENU
                         menuShopColor = Color.BLACK;
-                        if (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) || Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER))
-                        {
-                            gameState = "shop";
-                        }
+                        Raylib.DrawRectangle(925, 200, 400, 500, menuOptionBoxColor);
+                        Raylib.DrawText("WASD - MOVEMENT", 1000, 250, 24, Color.WHITE);
+                        Raylib.DrawText("TAB - PAUSE", 1000, 300, 24, Color.WHITE);
+                        Raylib.DrawText("ESC - QUIT", 1000, 350, 24, Color.WHITE);
+
                     }
                     else
                     {
@@ -1288,7 +1288,7 @@ namespace graphics
                     {
                         //GRAFIK
                         Raylib.BeginDrawing();
-                        Raylib.ClearBackground(Color.YELLOW);
+                        Raylib.ClearBackground(Color.RED);
                         Raylib.DrawText("Are you sure you want to continiue?", 600, 200, 32, Color.BLACK);
                         Raylib.DrawText("This last level is kind of difficult.", 600, 250, 32, Color.BLACK);
                         Raylib.DrawText("CONTINIUE", 600, 300, 24, menuResumeColor);
@@ -1334,7 +1334,7 @@ namespace graphics
                         }
                         else
                         {
-                            menuResumeColor = Color.GRAY;
+                            menuResumeColor = Color.WHITE;
                         }
                         if (menuTarget == 2)
                         {
@@ -1347,7 +1347,7 @@ namespace graphics
                         }
                         else
                         {
-                            menuExitColor = Color.GRAY;
+                            menuExitColor = Color.WHITE;
                         }
                         if (menuTarget == 3)
                         {
@@ -1359,7 +1359,7 @@ namespace graphics
                         }
                         else
                         {
-                            menuShopColor = Color.GRAY;
+                            menuShopColor = Color.WHITE;
                         }
 
                         Raylib.EndDrawing();
@@ -1400,7 +1400,7 @@ namespace graphics
                             playerDead = false;
                         }
                         Raylib.BeginDrawing();
-                        Raylib.ClearBackground(Color.DARKGRAY);
+                        Raylib.ClearBackground(Color.DARKPURPLE);
 
                         //RUTNÄT
                         for (int y = 50; y < 950; y += 100)
@@ -1416,7 +1416,7 @@ namespace graphics
                                 else if (count == false)
                                 {
                                     count = true;
-                                    Raylib.DrawRectangle(x, y, 100, 100, Color.GRAY);
+                                    Raylib.DrawRectangle(x, y, 100, 100, Color.PURPLE);
                                 }
                             }
                         }
@@ -1508,7 +1508,7 @@ namespace graphics
                         }
 
                         Raylib.BeginDrawing();
-                        Raylib.ClearBackground(Color.DARKGRAY);
+                        Raylib.ClearBackground(Color.DARKPURPLE);
 
                         //GUI LEVEL THREE
                         Raylib.DrawText("KEYS: ", 50, 10, 32, Color.WHITE);
@@ -1535,7 +1535,7 @@ namespace graphics
                                 else if (count == false)
                                 {
                                     count = true;
-                                    Raylib.DrawRectangle(x, y, 100, 100, Color.GRAY);
+                                    Raylib.DrawRectangle(x, y, 100, 100, Color.PURPLE);
                                 }
                             }
                         }
@@ -1655,7 +1655,7 @@ namespace graphics
                             playerDead = false;
                         }
                         Raylib.BeginDrawing();
-                        Raylib.ClearBackground(Color.DARKGRAY);
+                        Raylib.ClearBackground(Color.DARKPURPLE);
 
                         //GUI LEVEL THREE
                         Raylib.DrawText("KEYS: ", 50, 10, 32, Color.WHITE);
@@ -1680,7 +1680,7 @@ namespace graphics
                                 else if (count == false)
                                 {
                                     count = true;
-                                    Raylib.DrawRectangle(x, y, 100, 100, Color.GRAY);
+                                    Raylib.DrawRectangle(x, y, 100, 100, Color.PURPLE);
                                 }
                             }
                         }
@@ -1739,7 +1739,7 @@ namespace graphics
                     Raylib.DrawText("noodle3", 350, (int)endingTextPosition + 375, 32, Color.BLACK);
                     Raylib.DrawText("Music created by:", 350, (int)endingTextPosition + 475, 32, Color.BLACK);
                     Raylib.DrawText("noodle3", 350, (int)endingTextPosition + 550, 32, Color.BLACK);
-                    Raylib.DrawText("Graphics and game content created by:", 350, (int)endingTextPosition + 650, 32, Color.BLACK);
+                    Raylib.DrawText("Game content created by:", 350, (int)endingTextPosition + 650, 32, Color.BLACK);
                     Raylib.DrawText("noodle3", 350, (int)endingTextPosition + 725, 32, Color.BLACK);
                     //SKIP 
                     Raylib.DrawText("SKIP [ C ]", 1830, 950, 16, skipColor);
@@ -1750,6 +1750,8 @@ namespace graphics
                     }
                     if (endingTextPosition < -725)
                     {
+                        skipColor = Color.WHITE;
+
                         Raylib.DrawText("Play again", 350, 450, 32, menuResumeColor);
                         Raylib.DrawText("Exit", 550, 450, 32, menuExitColor);
                         //MENU MOVEMENT FÖR SLUT MENYN
@@ -1804,12 +1806,9 @@ namespace graphics
                         {
                             menuExitColor = Color.GRAY;
                         }
-
-
                     }
 
                     Raylib.EndDrawing();
-
                     endingTextPosition -= 0.1f;
                 }
 
