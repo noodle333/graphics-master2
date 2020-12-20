@@ -1,6 +1,7 @@
 ﻿//ATT GÖRA
-//LÄGG TILL MUSIK OCH RITA UT TRACK 1/2/3 I INTRO MENYN.
-//LÄGG TILL ETT SKIN
+//TA BORT MUSIC TRACKS FRÅN INTRO MENYN
+//GÖR MUSIK FÖR PAUS OCH SHOP MENYN
+//ÅTERSTÄLL MUSIKEN VARJE G^ÅNG MAN BYTER STAGE
 
 using System;
 using Raylib_cs;
@@ -15,6 +16,17 @@ namespace graphics
             const int screenWidth = 1920;
             const int screenHeight = 1000;
             Raylib.InitWindow(screenWidth, screenHeight, "GAME");
+            //LJUD
+            Raylib.InitAudioDevice();
+            Raylib.SetMasterVolume(0.3f);
+            Music introMusic = Raylib.LoadMusicStream("intro.mp3");
+            Music levelOneMusic = Raylib.LoadMusicStream("game2.mp3");
+            Music levelTwoMusic = Raylib.LoadMusicStream("game.mp3");
+            Music levelThreeIntro = Raylib.LoadMusicStream("game3.mp3");
+            Music levelThreeMusic = Raylib.LoadMusicStream("game3new.mp3");
+            Music endingMusic = Raylib.LoadMusicStream("ending.mp3");
+            Sound deathSound = Raylib.LoadSound("death.mp3");
+
             //BACKGROUND IMAGES
             Texture2D thirdBackground = Raylib.LoadTexture("thirdbackground.png");
             Texture2D secondBackground = Raylib.LoadTexture("secondbackground.png");
@@ -126,6 +138,11 @@ namespace graphics
                 //INTRO LOOP
                 if (gameState == "intro")
                 {
+                    // SPELA INTRO MUSIK
+                    Raylib.PlayMusicStream(introMusic);
+                    Raylib.UpdateMusicStream(introMusic);
+                    Raylib.SetMusicVolume(introMusic, 1.0f);
+
                     //GE VÄRDEN PÅ VARIABLER, OLIKA HASTIGHETER FÖR DJUP
                     scrollFirst -= 0.3f;
                     scrollSecond -= 0.2f;
@@ -150,15 +167,15 @@ namespace graphics
                     Raylib.ClearBackground(Color.WHITE);
 
                     //RITA UT TEXTURERNA TVÅ GÅNGER BREDVID VARANDRA OCH FLYTTA BÅDA ÅT VÄNSTER
+                    //(Extremt inspirerad från internet)
                     Raylib.DrawTextureEx(thirdBackground, new Vector2(scrollThird, 0), 0.0f, 2.0f, Color.WHITE);
                     Raylib.DrawTextureEx(thirdBackground, new Vector2(thirdBackground.width * 2 + scrollThird, 0), 0.0f, 2.0f, Color.WHITE);
-
                     Raylib.DrawTextureEx(secondBackground, new Vector2(scrollSecond, 0), 0.0f, 2.0f, Color.WHITE);
                     Raylib.DrawTextureEx(secondBackground, new Vector2(secondBackground.width * 2 + scrollSecond, 0), 0.0f, 2.0f, Color.WHITE);
-
                     Raylib.DrawTextureEx(firstBackground, new Vector2(scrollFirst, 0), 0.0f, 2.0f, Color.WHITE);
                     Raylib.DrawTextureEx(firstBackground, new Vector2(firstBackground.width * 2 + scrollFirst, 0), 0.0f, 2.0f, Color.WHITE);
 
+                    //INTRO MENY
                     Raylib.DrawText("THE COLORED SQUARE GAME", 200, 200, 32, Color.BLACK);
                     Raylib.DrawText("COLORED", 281, 200, 32, Color.PURPLE); //RITA ÖVER COLORED ORDET I FÖRSTA TILL FÄRG
                     Raylib.DrawText("(PRESS TAB WHILE IN GAME TO PAUSE)", 200, 250, 16, Color.BLACK);
@@ -356,7 +373,10 @@ namespace graphics
                     playerDead = resultCollision.pDead;
                     gameState = resultCollision.gState;
                     stage = resultCollision.mStage;
-
+                    //MUSIK LEVEL ONE
+                    Raylib.PlayMusicStream(levelOneMusic);
+                    Raylib.UpdateMusicStream(levelOneMusic);
+                    Raylib.SetMusicVolume(levelOneMusic, 0.3f);
                     if (playerDead == true)
                     {
                         playerX = 225;
@@ -368,7 +388,10 @@ namespace graphics
                         keyTwoReady = true;
                         keyTwoColor = Color.GOLD;
                         playerDead = false;
+                        Raylib.PlaySound(deathSound);
+                        Raylib.SetSoundVolume(deathSound, 0.3f);
                     }
+
                     //VÄGG COLLISION
                     if (playerX > 99 && playerX < 351 && playerY > 99 && playerY < 800) //OM DEN ÄR INOM SPAWN
                     {
@@ -767,6 +790,11 @@ namespace graphics
                     playerDead = resultCollision.pDead;
                     gameState = resultCollision.gState;
                     stage = resultCollision.mStage;
+                    //MUSIK LEVEL TWO
+                    Raylib.PlayMusicStream(levelTwoMusic);
+                    Raylib.UpdateMusicStream(levelTwoMusic);
+                    Raylib.SetMusicVolume(levelTwoMusic, 0.9f);
+
                     //WHAT TO DO WHEN PLAYER DIES
                     if (playerDead == true)
                     {
@@ -784,6 +812,8 @@ namespace graphics
                         timerOne = 0;
                         timerTwo = 0;
                         timerThree = 0;
+                        Raylib.PlaySound(deathSound);
+                        Raylib.SetSoundVolume(deathSound, 0.3f);
                     }
 
                     //COLLISION VÄGGAR
@@ -1286,6 +1316,10 @@ namespace graphics
 
                     if (stage == 0)
                     {
+                        //MUSIK LEVEL THREE
+                        Raylib.PlayMusicStream(levelThreeIntro);
+                        Raylib.UpdateMusicStream(levelThreeIntro);
+                        Raylib.SetMusicVolume(levelThreeIntro, 1.0f);
                         //GRAFIK
                         Raylib.BeginDrawing();
                         Raylib.ClearBackground(Color.RED);
@@ -1366,6 +1400,10 @@ namespace graphics
                     }
                     if (stage == 1)
                     {
+                        //MUSIK LEVEL THREE
+                        Raylib.PlayMusicStream(levelThreeMusic);
+                        Raylib.UpdateMusicStream(levelThreeMusic);
+                        Raylib.SetMusicVolume(levelThreeMusic, 1.0f);
                         //COLLISION STAGE 1
                         if (playerX <= 20)
                         {
@@ -1398,6 +1436,8 @@ namespace graphics
                             keyThreeColor = Color.GOLD;
                             keyThreeReady = true;
                             playerDead = false;
+                            Raylib.PlaySound(deathSound);
+                            Raylib.SetSoundVolume(deathSound, 0.3f);
                         }
                         Raylib.BeginDrawing();
                         Raylib.ClearBackground(Color.DARKPURPLE);
@@ -1471,6 +1511,10 @@ namespace graphics
                     }
                     else if (stage == 2)
                     {
+                        //MUSIK LEVEL THREE
+                        Raylib.PlayMusicStream(levelThreeMusic);
+                        Raylib.UpdateMusicStream(levelThreeMusic);
+                        Raylib.SetMusicVolume(levelThreeMusic, 1.0f);
                         //COLLISION STAGE 2
                         if (playerY <= 50)
                         {
@@ -1505,6 +1549,8 @@ namespace graphics
                             keyThreeColor = Color.GOLD;
                             keyThreeReady = true;
                             playerDead = false;
+                            Raylib.PlaySound(deathSound);
+                            Raylib.SetSoundVolume(deathSound, 0.3f);
                         }
 
                         Raylib.BeginDrawing();
@@ -1622,6 +1668,10 @@ namespace graphics
                     //STAGE 3
                     else if (stage == 3)
                     {
+                        //MUSIK LEVEL THREE
+                        Raylib.PlayMusicStream(levelThreeMusic);
+                        Raylib.UpdateMusicStream(levelThreeMusic);
+                        Raylib.SetMusicVolume(levelThreeMusic, 1.0f);
                         if (playerX <= -20)
                         {
                             stage = 2;
@@ -1653,6 +1703,8 @@ namespace graphics
                             keyThreeColor = Color.GOLD;
                             keyThreeReady = true;
                             playerDead = false;
+                            Raylib.PlaySound(deathSound);
+                            Raylib.SetSoundVolume(deathSound, 0.3f);
                         }
                         Raylib.BeginDrawing();
                         Raylib.ClearBackground(Color.DARKPURPLE);
@@ -1730,6 +1782,11 @@ namespace graphics
                 }
                 if (gameState == "ending")
                 {
+                    //MUSIK ENDING
+                    Raylib.PlayMusicStream(endingMusic);
+                    Raylib.UpdateMusicStream(endingMusic);
+                    Raylib.SetMusicVolume(endingMusic, 1.0f);
+
                     Raylib.BeginDrawing();
                     Raylib.ClearBackground(Color.WHITE);
                     //SCROLLING END CREDITS
@@ -1751,7 +1808,37 @@ namespace graphics
                     if (endingTextPosition < -725)
                     {
                         skipColor = Color.WHITE;
-
+                        //DEATHS
+                        Raylib.DrawText("You finished the game with " + deaths + " deaths...", 250, 250, 32, Color.BLACK);
+                        Raylib.DrawText("" + deaths, 687, 250, 32, Color.RED);
+                        if (deaths >= 0 && deaths <= 20)
+                        {
+                            Raylib.DrawText("That's kind of good I guess, depending on your time which I'm not aware of.", 250, 300, 32, Color.BLACK);
+                        }
+                        else if (deaths > 20 && deaths <= 40)
+                        {
+                            Raylib.DrawText("Congratulations, I guess? You should be able to cut down to at least 15.", 250, 300, 32, Color.BLACK);
+                        }
+                        else if (deaths > 40 && deaths <= 60)
+                        {
+                            Raylib.DrawText("That's rough.", 250, 300, 32, Color.BLACK);
+                            Raylib.DrawText("If you reset the game and finish it in less deaths nobody would know...", 250, 350, 32, Color.BLACK);
+                        }
+                        else if (deaths > 60 && deaths <= 70)
+                        {
+                            Raylib.DrawText("I don't even know what to say...", 250, 300, 32, Color.BLACK);
+                            Raylib.DrawText("I already used my best disses at way lower death rates.", 250, 350, 32, Color.BLACK);
+                        }
+                        else if (deaths > 70 && deaths <= 80)
+                        {
+                            Raylib.DrawText("Maybe I should've added an easier difficulty for players like you.", 250, 300, 32, Color.BLACK);
+                            Raylib.DrawText("That was an oversight from my part, I apologize.", 250, 350, 32, Color.BLACK);
+                        }
+                        else if (deaths > 80)
+                        {
+                            Raylib.DrawText("Your death number is way too high", 250, 300, 32, Color.BLACK);
+                            Raylib.DrawText("if you want this text to mean anything you really need to die less.", 250, 350, 32, Color.BLACK);
+                        }
                         Raylib.DrawText("Play again", 350, 450, 32, menuResumeColor);
                         Raylib.DrawText("Exit", 550, 450, 32, menuExitColor);
                         //MENU MOVEMENT FÖR SLUT MENYN
